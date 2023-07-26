@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity >=0.5.0 <0.9.0;
+pragma solidity 0.8.0;
 
 import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Context.sol";
@@ -9,13 +9,13 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract Wallet is Context, Ownable  {
 
+    using SafeMath for uint256;
+
     modifier tokenExists(bytes32 _ticker) {
         require(tokens[_ticker].tokenAddress != address(0), "Token does not exist");
         _;
     }
-
-    using SafeMath for uint256;
-
+    
     struct Token {
         bytes32 name;
         bytes32 ticker;
@@ -27,9 +27,15 @@ contract Wallet is Context, Ownable  {
 
     mapping (address => mapping (bytes32 => uint256)) public balances;
 
+    bytes32 constant ETH = bytes32("ETH");
+
     function addToken(bytes32 _name, bytes32 _ticker, address _tokenAddress) external onlyOwner() {
         tokens[_ticker] = Token(_name, _ticker, _tokenAddress);
         tokenList.push(_ticker);
+    }
+
+    function depositEth() payable external {
+        balances[_msgSender()][ETH] = balances[_msgSender()][ETH].add(msg.value);
     }
 
     function deposit(uint256 _amount, bytes32 _ticker) external tokenExists(_ticker) {

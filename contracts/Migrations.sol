@@ -1,17 +1,19 @@
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity >=0.5.0 <0.9.0;
+pragma solidity 0.8.0;
 
-contract Migrations {
+import "../node_modules/@openzeppelin/contracts/utils/Context.sol";
+
+contract Migrations is Context {
   address public owner;
   uint256 public last_completed_migration;
 
   modifier restricted() {
-    if (msg.sender == owner) _;
+    if (_msgSender() == owner) _;
   }
 
   constructor() {
-    owner = msg.sender;
+    owner = _msgSender();
   }
 
   function setCompleted(uint completed) public restricted {
