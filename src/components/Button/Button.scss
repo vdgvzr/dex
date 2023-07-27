@@ -1,0 +1,17 @@
+// Btn
+
+.custom-btn {
+  @extend %handjet;
+  border-radius: 0;
+  padding: 12px 40px;
+  text-transform: uppercase;
+  background-color: transparent;
+  border-color: color(brand, pink);
+  color: color(brand, pink);
+  @include spaced(5px);
+
+  &:hover {
+    background-color: color(brand, pink);
+    color: color(canvas);
+  }
+}

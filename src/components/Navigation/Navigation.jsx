@@ -4,6 +4,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { PAGES } from "../../router";
 import { useMetaMask } from "../../hooks/useMetamask";
 import { formatAddress } from "../../utils";
+import Btn from "../Button/Button";
 
 function Navigation() {
   const { wallet, hasProvider, isConnecting, connectMetaMask } = useMetaMask();
@@ -30,13 +31,11 @@ function Navigation() {
               </a>
             )}
             {window.ethereum?.isMetaMask && wallet.accounts.length < 1 && (
-              <button
-                className=""
+              <Btn
                 disabled={isConnecting}
-                onClick={connectMetaMask}
-              >
-                Connect MetaMask
-              </button>
+                text="Connect Wallet"
+                action={connectMetaMask}
+              />
             )}
             {hasProvider && wallet.accounts.length > 0 && (
               <a
