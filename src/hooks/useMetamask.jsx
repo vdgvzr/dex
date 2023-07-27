@@ -8,6 +8,9 @@ import {
 import detectEthereumProvider from "@metamask/detect-provider";
 import { formatBalance } from "../utils/index";
 
+import Dex from "../../abis/Dex.json";
+import Web3 from "web3";
+
 const disconnectedState = {
   accounts: [],
   balance: "",
@@ -18,13 +21,13 @@ export const MetaMaskContext = createContext(null);
 
 export const MetaMaskContextProvider = ({ children }) => {
   const [hasProvider, setHasProvider] = useState(false);
-
   const [isConnecting, setIsConnecting] = useState(false);
-
   const [errorMessage, setErrorMessage] = useState("");
+  const [wallet, setWallet] = useState(disconnectedState);
+  const [isLoading, setIsLoading] = useState(false);
+  const [dex, setDex] = useState(null);
   const clearError = () => setErrorMessage("");
 
-  const [wallet, setWallet] = useState(disconnectedState);
   // useCallback ensures that we don't uselessly re-create the _updateWallet function on every render
   const _updateWallet = useCallback(async (providedAccounts) => {
     const accounts =
@@ -59,6 +62,27 @@ export const MetaMaskContextProvider = ({ children }) => {
     [_updateWallet]
   );
 
+  const _loadWeb3 = useCallback(async () => {
+    setIsLoading(true);
+
+    try {
+      window.web3 = new Web3(window.ethereum);
+      const networkId = await window.web3.eth.net.getId();
+      const networkData = Dex.networks[networkId];
+
+      if (networkData) {
+        const dex = new window.web3.eth.Contract(Dex.abi, networkData.address);
+        setDex(dex);
+      }
+    } catch (err) {
+      setErrorMessage(err);
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  const loadWeb3 = useCallback(() => _loadWeb3(), [_loadWeb3]);
+
   /**
    * This logic checks if MetaMask is installed. If it is, then we setup some
    * event handlers to update the wallet state when MetaMask changes. The function
@@ -72,8 +96,11 @@ export const MetaMaskContextProvider = ({ children }) => {
 
       if (provider) {
         updateWalletAndAccounts();
+        loadWeb3();
         window.ethereum.on("accountsChanged", updateWallet);
+        window.ethereum.on("accountsChanged", loadWeb3);
         window.ethereum.on("chainChanged", updateWalletAndAccounts);
+        window.ethereum.on("chainChanged", loadWeb3);
       }
     };
 
@@ -81,9 +108,11 @@ export const MetaMaskContextProvider = ({ children }) => {
 
     return () => {
       window.ethereum?.removeListener("accountsChanged", updateWallet);
+      window.ethereum?.removeListener("accountsChanged", loadWeb3);
       window.ethereum?.removeListener("chainChanged", updateWalletAndAccounts);
+      window.ethereum?.removeListener("chainChanged", loadWeb3);
     };
-  }, [updateWallet, updateWalletAndAccounts]);
+  }, [updateWallet, updateWalletAndAccounts, loadWeb3]);
 
   const connectMetaMask = async () => {
     setIsConnecting(true);
@@ -108,6 +137,8 @@ export const MetaMaskContextProvider = ({ children }) => {
         error: !!errorMessage,
         errorMessage,
         isConnecting,
+        isLoading,
+        dex,
         connectMetaMask,
         clearError,
       }}

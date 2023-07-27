@@ -48,8 +48,8 @@ contract Wallet is Context, Ownable  {
     /**
     * @dev Deposit ETH into your account
     */
-    function depositEth() payable external {
-        balances[_msgSender()][ETH] = balances[_msgSender()][ETH].add(msg.value);
+    function depositEth() public payable {
+        balances[_msgSender()][ETH] += msg.value;
     }
 
     /**

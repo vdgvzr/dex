@@ -6,34 +6,36 @@ import { useMetaMask } from "../../hooks/useMetamask";
 import { formatAddress, formatChainAsNum } from "../../utils";
 import Btn from "../Button/Button";
 import Icon from "../Icon/Icon";
+import { Link } from "react-router-dom";
 
 function Navigation() {
   const { wallet, hasProvider, isConnecting, connectMetaMask } = useMetaMask();
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" className="">
+    <Navbar bg="transparent" variant="dark" expand="lg" className="">
       <Container>
-        <Navbar.Brand href="/">{import.meta.env.VITE_SITE_NAME}</Navbar.Brand>
+        <Link className="navbar-brand" to="/">
+          {import.meta.env.VITE_SITE_NAME}
+        </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav>
             {PAGES.map((page, index) => {
-              if (page.name !== "App") {
-                return (
-                  <Nav.Link key={index} href={page.url}>
-                    {page.name}
-                  </Nav.Link>
-                );
-              }
+              return (
+                <Link className="nav-link" key={index} to={page.url}>
+                  {page.name}
+                </Link>
+              );
             })}
             {!hasProvider && (
-              <Nav.Link
-                href="https://metamask.io"
+              <Link
+                className="nav-link"
+                to="https://metamask.io"
                 target="_blank"
                 rel="noreferrer"
               >
                 Install MetaMask
-              </Nav.Link>
+              </Link>
             )}
             {window.ethereum?.isMetaMask && wallet.accounts.length < 1 && (
               <Btn
@@ -44,21 +46,27 @@ function Navigation() {
             )}
             {hasProvider && wallet.accounts.length > 0 && (
               <>
-                <Nav.Link className="navbar__wallet-info" disabled={true}>
+                <Link
+                  className="nav-link navbar__wallet-info disabled"
+                  disabled={true}
+                >
                   {formatChainAsNum(wallet.chainId)}
-                </Nav.Link>
-                <Nav.Link className="navbar__wallet-info" disabled={true}>
+                </Link>
+                <Link
+                  className="nav-link navbar__wallet-info disabled"
+                  disabled={true}
+                >
                   <Icon icon="eth" />
                   {wallet.balance}
-                </Nav.Link>
-                <Nav.Link
-                  className=""
-                  href={`https://etherscan.io/address/${wallet.accounts[0]}`}
+                </Link>
+                <Link
+                  className="nav-link "
+                  to={`https://etherscan.io/address/${wallet.accounts[0]}`}
                   target="_blank"
                   rel="noreferrer"
                 >
                   {formatAddress(wallet.accounts[0])}
-                </Nav.Link>
+                </Link>
               </>
             )}
           </Nav>
