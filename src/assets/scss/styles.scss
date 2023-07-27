@@ -1,0 +1,15 @@
+@import "./config/variables.scss";
+
+@import "./utils/functions/color.scss";
+@import "./utils/functions/rem.scss";
+
+@import "./utils/mixins/spaced.scss";
+
+@import "./utils/placeholders/fonts.scss";
+@import "./utils/fonts.scss";
+
+@import "./bootstrap/bootstrap.scss";
+@import "./main.scss";
+
+@import "../../components/Navigation/Navigation.scss";
+@import "../../components/Footer/Footer.scss";

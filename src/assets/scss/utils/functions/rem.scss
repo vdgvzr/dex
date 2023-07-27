@@ -1,0 +1,5 @@
+// Function - rem
+
+@function rem($px: $base-font-size) {
+  @return calc($px / $base-font-size) + rem;
+}

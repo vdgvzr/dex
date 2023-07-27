@@ -9,7 +9,7 @@ function Navigation() {
   const { wallet, hasProvider, isConnecting, connectMetaMask } = useMetaMask();
 
   return (
-    <Navbar bg="ls" expand="lg" className="bg-body-tertiary">
+    <Navbar bg="dark" variant="dark" expand="lg" className="">
       <Container>
         <Navbar.Brand href="/">{import.meta.env.VITE_SITE_NAME}</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

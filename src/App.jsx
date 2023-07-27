@@ -2,7 +2,7 @@ import { Outlet, ScrollRestoration } from "react-router-dom";
 import { MetaMaskContextProvider } from "./hooks/useMetamask";
 import Navigation from "./components/Navigation/Navigation";
 import { Container } from "react-bootstrap";
-import Footer from "./assets/Footer/Footer";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <MetaMaskContextProvider>
         <Navigation />
         <ScrollRestoration />
-        <Container>
+        <Container className="main-content">
           <Outlet />
         </Container>
         <Footer />

@@ -1,0 +1,5 @@
+// Mixin - spaced lettering
+
+@mixin spaced($spacing: 2px) {
+  letter-spacing: $spacing;
+}

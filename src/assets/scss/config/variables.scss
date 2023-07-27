@@ -1,0 +1,43 @@
+// Variables
+
+// Spacing
+
+// Borders
+
+// Colours
+$palettes: (
+  black: (
+    base: #000000,
+  ),
+  white: (
+    base: #ffffff,
+  ),
+  online: (
+    base: #6bf216,
+  ),
+  canvas: (
+    base: #0d1117,
+  ),
+  grey: (
+    air: #f5f5f4,
+    haze: #f0f0f0,
+    mist: #dadbdd,
+    ghost: #c6c6c6,
+    granite: #969699,
+    slate: #4f5054,
+    charcoal: #262525,
+  ),
+  brand: (
+    green: hsl(184, 74%, 44%),
+    pink: hsl(332, 87%, 70%),
+  ),
+);
+
+// Transitions
+$transition-normal: 0.14s;
+$transition-slow: 0.28s;
+
+// Fonts
+$base-font-size: 16;
+$base-font-stack-handjet: "Handjet";
+$base-font-stack-sharetech: "Sharetech";
