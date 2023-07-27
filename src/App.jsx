@@ -1,11 +1,20 @@
-import Wallet from "../abis/Wallet.json";
-
-console.log(Wallet);
+import { Outlet, ScrollRestoration } from "react-router-dom";
+import { MetaMaskContextProvider } from "./hooks/useMetamask";
+import Navigation from "./components/Navigation/Navigation";
+import { Container } from "react-bootstrap";
+import Footer from "./assets/Footer/Footer";
 
 function App() {
   return (
     <>
-      <h1>{import.meta.env.VITE_SITE_NAME}</h1>
+      <MetaMaskContextProvider>
+        <Navigation />
+        <ScrollRestoration />
+        <Container>
+          <Outlet />
+        </Container>
+        <Footer />
+      </MetaMaskContextProvider>
     </>
   );
 }
