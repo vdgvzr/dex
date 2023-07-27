@@ -3,8 +3,9 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { PAGES } from "../../router";
 import { useMetaMask } from "../../hooks/useMetamask";
-import { formatAddress } from "../../utils";
+import { formatAddress, formatChainAsNum } from "../../utils";
 import Btn from "../Button/Button";
+import Icon from "../Icon/Icon";
 
 function Navigation() {
   const { wallet, hasProvider, isConnecting, connectMetaMask } = useMetaMask();
@@ -26,9 +27,13 @@ function Navigation() {
               }
             })}
             {!hasProvider && (
-              <a href="https://metamask.io" target="_blank" rel="noreferrer">
+              <Nav.Link
+                href="https://metamask.io"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Install MetaMask
-              </a>
+              </Nav.Link>
             )}
             {window.ethereum?.isMetaMask && wallet.accounts.length < 1 && (
               <Btn
@@ -38,14 +43,23 @@ function Navigation() {
               />
             )}
             {hasProvider && wallet.accounts.length > 0 && (
-              <a
-                className=""
-                href={`https://etherscan.io/address/${wallet.accounts[0]}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {formatAddress(wallet.accounts[0])}
-              </a>
+              <>
+                <Nav.Link className="navbar__wallet-info" disabled={true}>
+                  {formatChainAsNum(wallet.chainId)}
+                </Nav.Link>
+                <Nav.Link className="navbar__wallet-info" disabled={true}>
+                  <Icon icon="eth" />
+                  {wallet.balance}
+                </Nav.Link>
+                <Nav.Link
+                  className=""
+                  href={`https://etherscan.io/address/${wallet.accounts[0]}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {formatAddress(wallet.accounts[0])}
+                </Nav.Link>
+              </>
             )}
           </Nav>
         </Navbar.Collapse>

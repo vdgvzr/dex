@@ -1,4 +1,5 @@
 .navbar {
+  @extend %handjet;
   height: 75px;
 
   &-brand {
@@ -24,6 +25,16 @@
       background-clip: text;
       -webkit-text-fill-color: transparent;
       transition: all $transition-slow;
+    }
+  }
+
+  .navbar__wallet-info {
+    color: color(grey, air) !important;
+
+    .icon {
+      fill: white;
+      height: 15px;
+      width: 15px;
     }
   }
 }
