@@ -13,5 +13,17 @@
     -webkit-text-fill-color: transparent;
     font-size: rem(40);
     @include spaced(5px);
+
+    &:hover {
+      background: linear-gradient(
+        to left,
+        color(brand, green),
+        color(brand, pink)
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: all $transition-slow;
+    }
   }
 }
