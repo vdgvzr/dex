@@ -32,6 +32,7 @@ contract Wallet is Context, Ownable  {
 
     mapping (bytes32 => Token) public tokens;
     bytes32[] public tokenList;
+    uint256 public tokenListCount = 0;
 
     mapping (address => mapping (bytes32 => uint256)) public balances;
 
@@ -43,13 +44,21 @@ contract Wallet is Context, Ownable  {
     function addToken(bytes32 _name, bytes32 _ticker, address _tokenAddress) external onlyOwner() {
         tokens[_ticker] = Token(_name, _ticker, _tokenAddress);
         tokenList.push(_ticker);
+        tokenListCount = tokenListCount.add(1);
     }
 
     /**
     * @dev Deposit ETH into your account
     */
     function depositEth() public payable {
-        balances[_msgSender()][ETH] += msg.value;
+        balances[_msgSender()][ETH] = balances[_msgSender()][ETH].add(msg.value);
+    }
+
+    function withdrawEth(uint256 _amount) public payable returns (bool) {
+        require(balances[_msgSender()][ETH] >= _amount, "Insufficient balance");
+        balances[_msgSender()][ETH] = balances[_msgSender()][ETH].sub(_amount);
+        (bool success,) = _msgSender().call{value: _amount}("");
+        return success;
     }
 
     /**

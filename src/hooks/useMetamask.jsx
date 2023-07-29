@@ -6,7 +6,7 @@ import {
   useCallback,
 } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
-import { formatBalance } from "../utils/index";
+import { formatBalance, formatFromBytes32 } from "../utils/index";
 
 import Dex from "../../abis/Dex.json";
 import Web3 from "web3";
@@ -20,12 +20,17 @@ const disconnectedState = {
 export const MetaMaskContext = createContext(null);
 
 export const MetaMaskContextProvider = ({ children }) => {
+  // Global state
   const [hasProvider, setHasProvider] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [wallet, setWallet] = useState(disconnectedState);
   const [isLoading, setIsLoading] = useState(false);
   const [dex, setDex] = useState(null);
+  const [owner, setOwner] = useState("0x0");
+  const [tokens, setTokens] = useState("0x0");
+  const [balances, setBalances] = useState([]);
+
   const clearError = () => setErrorMessage("");
 
   // useCallback ensures that we don't uselessly re-create the _updateWallet function on every render
@@ -65,17 +70,47 @@ export const MetaMaskContextProvider = ({ children }) => {
   const _loadWeb3 = useCallback(async () => {
     setIsLoading(true);
 
-    try {
-      window.web3 = new Web3(window.ethereum);
-      const networkId = await window.web3.eth.net.getId();
-      const networkData = Dex.networks[networkId];
+    window.web3 = new Web3(window.ethereum);
+    const accounts = await window.web3.eth.getAccounts();
+    const networkId = await window.web3.eth.net.getId();
+    const networkData = Dex.networks[networkId];
 
-      if (networkData) {
-        const dex = new window.web3.eth.Contract(Dex.abi, networkData.address);
-        setDex(dex);
+    if (networkData) {
+      // Get the dex contract
+      const dex = new window.web3.eth.Contract(Dex.abi, networkData.address);
+
+      // Get global vars
+      const owner = await dex?.methods.owner().call();
+
+      ///////////
+      const tokenListCount = parseInt(
+        await dex?.methods.tokenListCount().call()
+      );
+      const tokenList = [];
+      for (let i = 0; i < tokenListCount; i++) {
+        const token = await dex?.methods.tokenList(i).call();
+        tokenList.push(await dex?.methods.tokens(token).call());
       }
-    } catch (err) {
-      setErrorMessage(err);
+
+      ///////////
+
+      const balancesList = [];
+      for (let i = 0; i < tokenList.length; i++) {
+        const balance = await dex?.methods
+          .balances(accounts[0], tokenList[i].ticker)
+          .call();
+
+        balancesList.push({
+          coin: formatFromBytes32(tokenList[i].ticker),
+          amount: formatBalance(balance),
+        });
+      }
+
+      // Set global state vars
+      setDex(dex);
+      setOwner(owner);
+      setTokens(tokenList);
+      setBalances(balancesList);
     }
 
     setIsLoading(false);
@@ -139,8 +174,12 @@ export const MetaMaskContextProvider = ({ children }) => {
         isConnecting,
         isLoading,
         dex,
+        owner,
+        tokens,
+        balances,
         connectMetaMask,
         clearError,
+        loadWeb3,
       }}
     >
       {children}

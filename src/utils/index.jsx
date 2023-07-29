@@ -19,3 +19,7 @@ export const formatAddress = (addr) => {
 export const formatToBytes32 = (str) => {
   return ethers.encodeBytes32String(str);
 };
+
+export const formatFromBytes32 = (str) => {
+  return ethers.decodeBytes32String(str);
+};

@@ -1,22 +1,69 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Btn from "../components/Button/Button";
 import { useMetaMask } from "../hooks/useMetamask";
-import { formatToBytes32 } from "../utils/index";
+import Tbl from "../components/Table/Table";
+import { formatBalance, formatFromBytes32, formatToBytes32 } from "../utils";
 
 export default function Wallet() {
-  const { dex, wallet } = useMetaMask();
+  const { dex, wallet, loadWeb3, tokens, balances } = useMetaMask();
 
-  const [ethBalance, setEthBalance] = useState("0");
+  const headings = {
+    0: "Coin",
+    1: "Amount",
+    2: "Action",
+  };
 
-  async function getEthBalance() {
-    const owner = await dex?.methods
-      .balances(wallet.accounts[0], formatToBytes32("ETH"))
-      .call();
+  /* const rows = [
+    {
+      coin: "ETH",
+      amount: ethBalance,
+      action: (
+        <>
+          <Btn text="deposit" action={() => depositEth(wallet.accounts[0])} />
+          <Btn text="withdraw" action={() => withdrawEth(wallet.accounts[0])} />
+        </>
+      ),
+    },
+  ]; */
 
-    setEthBalance(window.web3.utils.fromWei(owner.toString(), "ether"));
-  }
+  const rows = [];
 
-  getEthBalance();
+  balances.map((balance) => {
+    rows.push({
+      coin: balance.coin,
+      amount: balance.amount,
+      action: (
+        <>
+          <Btn
+            text="deposit"
+            action={() =>
+              balance.coin === "ETH"
+                ? depositEth(wallet.accounts[0])
+                : deposit(
+                    wallet.accounts[0],
+                    1000,
+                    formatToBytes32(balance.coin)
+                  )
+            }
+          />
+          {parseFloat(balance.amount) >= 0 && (
+            <Btn
+              text="withdraw"
+              action={() =>
+                balance.coin === "ETH"
+                  ? withdrawEth(wallet.accounts[0])
+                  : withdraw(
+                      wallet.accounts[0],
+                      1000,
+                      formatToBytes32(balance.coin)
+                    )
+              }
+            />
+          )}
+        </>
+      ),
+    });
+  });
 
   function depositEth(from) {
     dex?.methods
@@ -27,6 +74,52 @@ export default function Wallet() {
       })
       .once("receipt", (receipt) => {
         console.log(receipt);
+        loadWeb3();
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+
+  function withdrawEth(from) {
+    dex?.methods
+      .withdrawEth(window.web3.utils.toWei(1, "ether"))
+      .send({
+        from,
+      })
+      .once("receipt", (receipt) => {
+        console.log(receipt);
+        loadWeb3();
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+
+  function deposit(from, amount, ticker) {
+    dex?.methods
+      .deposit(amount, ticker)
+      .send({
+        from,
+      })
+      .once("receipt", (receipt) => {
+        console.log(receipt);
+        loadWeb3();
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+
+  function withdraw(from, amount, ticker) {
+    dex?.methods
+      .withdraw(amount, ticker)
+      .send({
+        from,
+      })
+      .once("receipt", (receipt) => {
+        console.log(receipt);
+        loadWeb3();
       })
       .catch((e) => {
         console.error(e);
@@ -35,8 +128,7 @@ export default function Wallet() {
 
   return (
     <div>
-      <Btn text="deposit eth" action={() => depositEth(wallet.accounts[0])} />
-      <div>{ethBalance}</div>
+      <Tbl showHeadings={true} headings={headings} rows={rows} />
     </div>
   );
 }

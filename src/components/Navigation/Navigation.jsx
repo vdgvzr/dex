@@ -9,7 +9,14 @@ import Icon from "../Icon/Icon";
 import { Link } from "react-router-dom";
 
 function Navigation() {
-  const { wallet, hasProvider, isConnecting, connectMetaMask } = useMetaMask();
+  const { wallet, hasProvider, isConnecting, connectMetaMask, owner } =
+    useMetaMask();
+
+  function isOwner(wallet, owner) {
+    if (wallet.accounts[0] != undefined && owner != undefined) {
+      return owner.toUpperCase() === wallet.accounts[0].toUpperCase();
+    }
+  }
 
   return (
     <Navbar bg="transparent" variant="dark" expand="lg" className="">
@@ -21,11 +28,13 @@ function Navigation() {
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav>
             {PAGES.map((page, index) => {
-              return (
-                <Link className="nav-link" key={index} to={page.url}>
-                  {page.name}
-                </Link>
-              );
+              if (page.name !== "Admin" || isOwner(wallet, owner)) {
+                return (
+                  <Link className="nav-link" key={index} to={page.url}>
+                    {page.name}
+                  </Link>
+                );
+              }
             })}
             {!hasProvider && (
               <Link

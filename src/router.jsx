@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import Dex from "./pages/Dex";
 import Wallet from "./pages/Wallet";
+import Admin from "./pages/Admin";
+import Home from "./pages/Home";
 
 export const router = createBrowserRouter([
   {
@@ -11,7 +13,15 @@ export const router = createBrowserRouter([
       {
         errorElement: <h1>There has been an error</h1>,
         children: [
-          { index: true, element: <Dex /> },
+          { index: true, element: <Home /> },
+          {
+            path: "admin",
+            element: <Admin />,
+          },
+          {
+            path: "trade",
+            element: <Dex />,
+          },
           {
             path: "wallet",
             element: <Wallet />,

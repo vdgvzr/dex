@@ -1,6 +1,7 @@
 .navbar {
   @extend %handjet;
   height: 75px;
+  font-size: rem(15);
 
   &-brand {
     @extend %handjet;
