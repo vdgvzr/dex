@@ -1,5 +1,13 @@
 // Table
 
 .table {
-  --bs-table-bg: color(canvas) !important;
+  th,
+  td {
+    @extend %sharetech;
+    font-size: rem(14);
+  }
+
+  tr {
+    border-bottom: 1px solid color(grey, mist);
+  }
 }

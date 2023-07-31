@@ -1,10 +1,12 @@
+import { Col } from "react-bootstrap";
 import Form from "../forms/Form";
 
 export default function Admin() {
   return (
     <>
-      <h1>Admin</h1>
-      <Form type="addToken" />
+      <Col xs={6} className="p-4 bg-opaque">
+        <Form type="addToken" />
+      </Col>
     </>
   );
 }

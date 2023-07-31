@@ -4,6 +4,14 @@ body {
   color: color(grey, air) !important;
 }
 
+.main-content,
+.main-row {
+  min-height: calc(100vh - 132px);
+}
+
 .main-content {
-  min-height: calc(100vh - 75px);
+  background-image: url(public/logo.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
 }

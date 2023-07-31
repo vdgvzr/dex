@@ -1,10 +1,15 @@
-import Btn from "../components/Button/Button";
-import { useMetaMask } from "../hooks/useMetamask";
-import Tbl from "../components/Table/Table";
-import { formatToBytes32 } from "../utils";
+import { useMetaMask } from "../../hooks/useMetamask";
+import Tbl from "../../components/Table/Table";
+import { formatToBytes32 } from "../../utils";
+import WalletModal from "../../components/WalletModal/WalletModal";
+import { useState } from "react";
+import { Col, Row } from "react-bootstrap";
 
 export default function Wallet() {
   const { dex, link, wallet, loadWeb3, balances } = useMetaMask();
+
+  const [input, setInput] = useState(0);
+  const [showModal, setShowModal] = useState(true);
 
   const headings = {
     0: "Coin",
@@ -33,28 +38,46 @@ export default function Wallet() {
           : window.web3.utils.fromWei(available, "ether"),
       action: (
         <>
-          <Btn
-            text="deposit"
+          <WalletModal
+            showModal={showModal}
+            buttonText="Deposit"
+            token={balance.coin}
+            setInput={setInput}
+            value={
+              balance.coin === "ETH"
+                ? wallet.balance
+                : window.web3.utils.fromWei(available, "ether")
+            }
             action={() =>
               balance.coin === "ETH"
-                ? depositEth(wallet.accounts[0])
+                ? depositEth(
+                    wallet.accounts[0],
+                    window.web3.utils.toWei(input, "ether")
+                  )
                 : deposit(
                     wallet.accounts[0],
-                    window.web3.utils.toWei(500, "ether"),
+                    window.web3.utils.toWei(input, "ether"),
                     balance.coin,
                     contract
                   )
             }
           />
           {parseFloat(balance.amount) >= 0 && (
-            <Btn
-              text="withdraw"
+            <WalletModal
+              showModal={showModal}
+              buttonText="Withdraw"
+              token={balance.coin}
+              setInput={setInput}
+              value={balance.amount}
               action={() =>
                 balance.coin === "ETH"
-                  ? withdrawEth(wallet.accounts[0])
+                  ? withdrawEth(
+                      wallet.accounts[0],
+                      window.web3.utils.toWei(input, "ether")
+                    )
                   : withdraw(
                       wallet.accounts[0],
-                      window.web3.utils.toWei(400, "ether"),
+                      window.web3.utils.toWei(input, "ether"),
                       formatToBytes32(balance.coin)
                     )
               }
@@ -65,31 +88,36 @@ export default function Wallet() {
     });
   });
 
-  function depositEth(from) {
+  function depositEth(from, value) {
     dex?.methods
       .depositEth()
       .send({
         from,
-        value: window.web3.utils.toWei(1, "ether"),
+        value,
       })
       .once("receipt", (receipt) => {
         console.log(receipt);
         loadWeb3();
+        setInput("");
+        setShowModal(false);
       })
       .catch((e) => {
         console.error(e);
       });
   }
 
-  function withdrawEth(from) {
+  function withdrawEth(from, value) {
     dex?.methods
-      .withdrawEth(window.web3.utils.toWei(1, "ether"))
+      .withdrawEth()
       .send({
         from,
+        value,
       })
       .once("receipt", (receipt) => {
         console.log(receipt);
         loadWeb3();
+        setInput("");
+        setShowModal(false);
       })
       .catch((e) => {
         console.error(e);
@@ -117,6 +145,8 @@ export default function Wallet() {
         .once("receipt", (receipt) => {
           console.log(receipt);
           loadWeb3();
+          setInput("");
+          setShowModal(false);
         })
         .catch((e) => {
           console.error(e);
@@ -133,6 +163,8 @@ export default function Wallet() {
       .once("receipt", (receipt) => {
         console.log(receipt);
         loadWeb3();
+        setInput("");
+        setShowModal(false);
       })
       .catch((e) => {
         console.error(e);
@@ -140,8 +172,17 @@ export default function Wallet() {
   }
 
   return (
-    <div>
-      <Tbl showHeadings={true} headings={headings} rows={rows} />
-    </div>
+    <>
+      <Row className="justify-content-center">
+        <Col lg={8} md={10} xs={12} className="bg-opaque p-3">
+          <Tbl
+            showHeadings={true}
+            headings={headings}
+            rows={rows}
+            classes="my-5"
+          />
+        </Col>
+      </Row>
+    </>
   );
 }

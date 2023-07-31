@@ -1,0 +1,32 @@
+// Input
+
+.form-control {
+  background-color: color(canvas);
+  border-radius: 0;
+  border: 1px solid color(brand, pink);
+  color: color(grey, air);
+
+  &:focus {
+    background-color: color(canvas);
+    border-color: color(brand, green);
+    color: color(grey, air);
+  }
+}
+
+// Form input
+
+.form-input {
+  input {
+    border-radius: 0%;
+    border: 1px solid color(brand, green);
+    padding: 12px 0.75rem;
+  }
+
+  &__balance-element {
+    &-balance {
+      color: color(brand, green);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}

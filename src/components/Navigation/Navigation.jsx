@@ -19,7 +19,7 @@ function Navigation() {
   }
 
   return (
-    <Navbar bg="transparent" variant="dark" expand="lg" className="">
+    <Navbar variant="dark" expand="lg" className="">
       <Container>
         <Link className="navbar-brand" to="/">
           {import.meta.env.VITE_SITE_NAME}

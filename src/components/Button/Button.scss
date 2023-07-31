@@ -5,7 +5,7 @@
   border-radius: 0;
   padding: 12px 40px;
   text-transform: uppercase;
-  background-color: transparent;
+  background-color: color(canvas) !important;
   border-color: color(brand, pink);
   color: color(brand, pink);
   @include spaced(5px);

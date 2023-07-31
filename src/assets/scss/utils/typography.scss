@@ -13,6 +13,7 @@ a {
   @extend %sharetech;
   color: color(brand, green) !important;
   text-decoration: none !important;
+  cursor: pointer;
 
   &:hover {
     color: color(brand, pink) !important;

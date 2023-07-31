@@ -1,61 +1,36 @@
 import { Form } from "react-bootstrap";
 import { useMetaMask } from "../../hooks/useMetamask";
+import { formatAddress } from "../../utils";
+import { useRef } from "react";
 
 export default function Input({
   type,
   placeholder,
   step = null,
-  innerRef,
   label,
+  setInput,
   text,
   controlId,
-  transfer,
   defaultValue,
   options,
   disabled = false,
+  value,
 }) {
-  const { wallet } = useMetaMask();
-  /* const formatConnectedBalance = window.web3.utils.fromWei(
-    connectedBalance.toString(),
-    "ether"
-  ); */
+  const inputRef = useRef();
 
-  /* const valueElement = (
+  const valueElement = (
     <>
       <div className="form-input__balance-element d-flex justify-content-between">
         <div>{text}</div>
         <div
           className="form-input__balance-element-balance"
-          onClick={() => {
-            type === "number"
-              ? (innerRef.current.value = transfer
-                  ? wallet.balance
-                  : formatConnectedBalance)
-              : null;
-            type === "text"
-              ? transfer
-                ? (innerRef.current.value = wallet.accounts[0])
-                : null
-              : null;
-            setInput(true);
-          }}
+          onClick={() => (inputRef.current.value = value)}
         >
-          {type === "number" ? (
-            transfer ? (
-              <span>Max: {wallet.balance} ETH</span>
-            ) : (
-              <span>Max: {formatConnectedBalance} ETH</span>
-            )
-          ) : null}
-          {type === "text"
-            ? transfer
-              ? utils.formatAddress(wallet.accounts[0])
-              : null
-            : null}
+          <span>Max: {value} </span>
         </div>
       </div>
     </>
-  ); */
+  );
 
   return (
     <>
@@ -70,12 +45,13 @@ export default function Input({
             step={
               type && type === "number" ? (step != null ? step : null) : null
             }
-            ref={innerRef && innerRef}
+            onChange={(e) => setInput(e.target.value)}
+            ref={inputRef}
             disabled={disabled}
           />
         )}
 
-        {/* <Form.Text>{valueElement}</Form.Text> */}
+        <Form.Text>{valueElement}</Form.Text>
       </Form.Group>
     </>
   );

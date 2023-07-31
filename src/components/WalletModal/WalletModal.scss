@@ -1,0 +1,26 @@
+// Wallet modal
+
+.wallet-modal {
+  .modal-content {
+    background-color: color(canvas);
+    border-radius: 0;
+    border: 1px solid color(brand, pink);
+  }
+
+  .modal-body {
+    border-color: 1px solid color(brand, pink);
+  }
+  &__close-button {
+    cursor: pointer;
+
+    .icon {
+      fill: color(brand, pink);
+      height: 30px;
+      width: 30px;
+    }
+  }
+
+  .modal-footer {
+    justify-content: center;
+  }
+}
