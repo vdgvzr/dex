@@ -1,23 +1,14 @@
 import { Table } from "react-bootstrap";
 
 export default function Tbl({ showHeadings = false, headings, rows }) {
-  const width = 100 / Object.keys(headings).length;
-  const widthStyle = {
-    width: width.toString() + "%",
-  };
-
   return (
     <>
-      <Table borderless hover responsive variant="dark">
+      <Table borderless hover responsive variant="dark" className="text-center">
         {showHeadings && (
           <thead>
             <tr>
               {Object.values(headings).map((heading, i) => {
-                return (
-                  <th key={i} style={widthStyle}>
-                    {heading}
-                  </th>
-                );
+                return <th key={i}>{heading}</th>;
               })}
             </tr>
           </thead>
@@ -27,11 +18,7 @@ export default function Tbl({ showHeadings = false, headings, rows }) {
             return (
               <tr key={i}>
                 {Object.values(row).map((data, i) => {
-                  return (
-                    <td key={i} style={widthStyle}>
-                      {data}
-                    </td>
-                  );
+                  return <td key={i}>{data}</td>;
                 })}
               </tr>
             );

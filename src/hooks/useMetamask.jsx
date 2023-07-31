@@ -6,9 +6,14 @@ import {
   useCallback,
 } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
-import { formatBalance, formatFromBytes32 } from "../utils/index";
+import {
+  formatBalance,
+  formatFromBytes32,
+  formatToBytes32,
+} from "../utils/index";
 
 import Dex from "../../abis/Dex.json";
+import Link from "../../abis/Link.json";
 import Web3 from "web3";
 
 const disconnectedState = {
@@ -27,6 +32,7 @@ export const MetaMaskContextProvider = ({ children }) => {
   const [wallet, setWallet] = useState(disconnectedState);
   const [isLoading, setIsLoading] = useState(false);
   const [dex, setDex] = useState(null);
+  const [link, setLink] = useState(null);
   const [owner, setOwner] = useState("0x0");
   const [tokens, setTokens] = useState("0x0");
   const [balances, setBalances] = useState([]);
@@ -73,16 +79,21 @@ export const MetaMaskContextProvider = ({ children }) => {
     window.web3 = new Web3(window.ethereum);
     const accounts = await window.web3.eth.getAccounts();
     const networkId = await window.web3.eth.net.getId();
-    const networkData = Dex.networks[networkId];
+    const dexNetworkData = Dex.networks[networkId];
+    const linkNetworkData = Link.networks[networkId];
 
-    if (networkData) {
-      // Get the dex contract
-      const dex = new window.web3.eth.Contract(Dex.abi, networkData.address);
+    if (dexNetworkData && linkNetworkData) {
+      // Get the contracts
+      const dex = new window.web3.eth.Contract(Dex.abi, dexNetworkData.address);
+      const link = new window.web3.eth.Contract(
+        Link.abi,
+        linkNetworkData.address
+      );
 
       // Get global vars
       const owner = await dex?.methods.owner().call();
 
-      ///////////
+      /////////// Tokens
       const tokenListCount = parseInt(
         await dex?.methods.tokenListCount().call()
       );
@@ -92,8 +103,7 @@ export const MetaMaskContextProvider = ({ children }) => {
         tokenList.push(await dex?.methods.tokens(token).call());
       }
 
-      ///////////
-
+      /////////// Balances
       const balancesList = [];
       for (let i = 0; i < tokenList.length; i++) {
         const balance = await dex?.methods
@@ -105,9 +115,14 @@ export const MetaMaskContextProvider = ({ children }) => {
           amount: formatBalance(balance),
         });
       }
-
       // Set global state vars
       setDex(dex);
+      setLink({
+        contract: link,
+        available: await link.methods
+          .balanceOf(accounts[0], formatToBytes32("LINK"))
+          .call(),
+      });
       setOwner(owner);
       setTokens(tokenList);
       setBalances(balancesList);
@@ -174,6 +189,7 @@ export const MetaMaskContextProvider = ({ children }) => {
         isConnecting,
         isLoading,
         dex,
+        link,
         owner,
         tokens,
         balances,

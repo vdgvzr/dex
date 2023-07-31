@@ -35,6 +35,7 @@ contract("Wallet", async (accounts) => {
       await LINK.approve(DEX.address, 500);
       await DEX.deposit(100, LINK_SYMBOL);
       let balance = await DEX.balances(accounts[0], LINK_SYMBOL);
+      console.log(LINK.address);
       assert.equal(balance.toNumber(), 100);
     });
 

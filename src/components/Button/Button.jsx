@@ -5,14 +5,14 @@ export default function Btn({
   classes = false,
   variant,
   type,
-  action,
+  action, 
   disabled,
 }) {
   return (
     <>
       <Button
         type={type ? type : "button"}
-        className={classes ? classes + " custom-btn" : "custom-btn"}
+        className={classes ? classes + " custom-btn mx-2" : "custom-btn mx-2"}
         role="button"
         aria-label={text}
         onClick={action ? action : null}
