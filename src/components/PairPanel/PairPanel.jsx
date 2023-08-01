@@ -5,6 +5,7 @@ import axios from "axios";
 import { useState } from "react";
 import { getApi } from "../../api/api";
 import { Col } from "react-bootstrap";
+import TickerPrice from "../TickerPrice/TickerPrice";
 
 export default function PairPanel({ setSelectedToken }) {
   const { tokens } = useMetaMask();
@@ -16,24 +17,8 @@ export default function PairPanel({ setSelectedToken }) {
 
   const rows = [];
 
-  tokens?.map(async (token) => {
+  tokens?.map((token) => {
     if (formatFromBytes32(token.ticker) !== "ETH") {
-      /* let url = `${import.meta.env.VITE_PAPRIKA_URL}tickers/${formatFromBytes32(
-        token.ticker
-      ).toLowerCase()}-${formatFromBytes32(token.name).toLowerCase()}/`;
-      console.log(
-        await axios
-          .get(url)
-          .then((res) => {
-            if (res.status === 200 && res != undefined) {
-              return res.data.quotes.USD.price.toFixed(2);
-            }
-          })
-          .catch((e) => {
-            console.error(e);
-          })
-      ); */
-
       rows.push({
         pair: (
           <a onClick={() => setSelectedToken(formatFromBytes32(token.ticker))}>
@@ -43,7 +28,7 @@ export default function PairPanel({ setSelectedToken }) {
             /ETH
           </a>
         ),
-        price: 0,
+        price: <TickerPrice token={token} />,
       });
     }
   });
