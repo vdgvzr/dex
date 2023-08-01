@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import Dex from "./pages/Dex";
-import Wallet from "./pages/Wallet/Wallet";
+import Wallet from "./pages/Wallet";
 import Admin from "./pages/Admin";
 import Home from "./pages/Home";
 

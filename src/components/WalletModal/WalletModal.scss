@@ -4,17 +4,17 @@
   .modal-content {
     background-color: color(canvas);
     border-radius: 0;
-    border: 1px solid color(brand, pink);
+    border: 1px solid color(brand, primary);
   }
 
   .modal-body {
-    border-color: 1px solid color(brand, pink);
+    border-color: 1px solid color(brand, primary);
   }
   &__close-button {
     cursor: pointer;
 
     .icon {
-      fill: color(brand, pink);
+      fill: color(brand, primary);
       height: 30px;
       width: 30px;
     }

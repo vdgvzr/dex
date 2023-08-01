@@ -1,26 +1,54 @@
-import { Col, Row } from "react-bootstrap";
+import { Col } from "react-bootstrap";
 import { useMetaMask } from "../hooks/useMetamask";
+import { useEffect, useState } from "react";
+import TradingPanel from "../components/TradingPanel/TradingPanel";
+import { formatBalance, formatFromBytes32, formatToBytes32 } from "../utils";
+import PairPanel from "../components/PairPanel/PairPanel";
+import OrdersPanel from "../components/OrdersPanel/OrdersPanel";
+
+const ORDERTYPE = {
+  LIMIT: "LIMIT",
+  MARKET: "MARKET",
+};
 
 export default function Dex() {
-  const { isLoading, dex, tokens } = useMetaMask();
+  const { dex } = useMetaMask();
+  const [orderType, setOrderType] = useState(ORDERTYPE.LIMIT);
+  const [selectedToken, setSelectedToken] = useState("LINK");
+  const [orderAction, setOrderAction] = useState(0);
+  const [orderBook, setOrderBook] = useState([]);
+
+  useEffect(() => {
+    async function getOrderBook(token) {
+      return await dex?.methods
+        .getOrderBook(token, orderAction)
+        .call()
+        .then((res) => {
+          setOrderBook(res);
+        });
+    }
+
+    getOrderBook(formatToBytes32(selectedToken), orderAction);
+  }, [dex, orderAction, selectedToken]);
 
   return (
     <>
-      <Row>
-        <Col>
-          <Row>
-            <div>{!isLoading && dex?._address}</div>
-            <div>
-              <ul>
-                {tokens !== "0x0" &&
-                  tokens.map((token, i) => {
-                    return <li key={i}>{token.ticker}</li>;
-                  })}
-              </ul>
-            </div>
-          </Row>
-        </Col>
-      </Row>
+      <Col xs={3} className="bg-opaque pair-panel">
+        <PairPanel setSelectedToken={setSelectedToken} />
+      </Col>
+      <Col xs={6} className="bg-opaque border-brand-primary p-3 trading-panel">
+        <TradingPanel
+          orderType={orderType}
+          setOrderType={setOrderType}
+          ORDERTYPE={ORDERTYPE}
+          selectedToken={selectedToken}
+          orderAction={orderAction}
+          setOrderAction={setOrderAction}
+        />
+      </Col>
+      <Col xs={3} className="bg-opaque  p-3 order-panel">
+        <OrdersPanel orderBook={orderBook} />
+      </Col>
     </>
   );
 }

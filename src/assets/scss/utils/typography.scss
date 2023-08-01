@@ -11,11 +11,11 @@ h6 {
 
 a {
   @extend %sharetech;
-  color: color(brand, green) !important;
+  color: color(brand, secondary) !important;
   text-decoration: none !important;
   cursor: pointer;
 
   &:hover {
-    color: color(brand, pink) !important;
+    color: color(brand, primary) !important;
   }
 }

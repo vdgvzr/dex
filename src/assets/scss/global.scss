@@ -1,5 +1,9 @@
 // Global
 
 .bg-opaque {
-  background-color: rgba(0, 0, 0, 0.5) !important;
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.border-brand-primary {
+  border: 1px solid color(brand, primary);
 }

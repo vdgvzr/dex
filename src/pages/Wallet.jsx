@@ -1,12 +1,12 @@
-import { useMetaMask } from "../../hooks/useMetamask";
-import Tbl from "../../components/Table/Table";
-import { formatToBytes32 } from "../../utils";
-import WalletModal from "../../components/WalletModal/WalletModal";
+import { useMetaMask } from "../hooks/useMetamask";
+import Tbl from "../components/Table/Table";
+import { formatToBytes32 } from "../utils";
+import WalletModal from "../components/WalletModal/WalletModal";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 
 export default function Wallet() {
-  const { dex, link, wallet, loadWeb3, balances } = useMetaMask();
+  const { dex, link, doge, wbtc, wallet, loadWeb3, balances } = useMetaMask();
 
   const [input, setInput] = useState(0);
   const [showModal, setShowModal] = useState(true);
@@ -27,6 +27,16 @@ export default function Wallet() {
     if (balance.coin === "LINK") {
       contract = link.contract;
       available = link.available;
+    }
+
+    if (balance.coin === "DOGE") {
+      contract = doge.contract;
+      available = doge.available;
+    }
+
+    if (balance.coin === "WBTC") {
+      contract = wbtc.contract;
+      available = wbtc.available;
     }
 
     rows.push({
@@ -108,10 +118,9 @@ export default function Wallet() {
 
   function withdrawEth(from, value) {
     dex?.methods
-      .withdrawEth()
+      .withdrawEth(value)
       .send({
         from,
-        value,
       })
       .once("receipt", (receipt) => {
         console.log(receipt);
@@ -174,7 +183,12 @@ export default function Wallet() {
   return (
     <>
       <Row className="justify-content-center">
-        <Col lg={8} md={10} xs={12} className="bg-opaque p-3">
+        <Col
+          lg={8}
+          md={10}
+          xs={12}
+          className="bg-opaque border-brand-primary p-3"
+        >
           <Tbl
             showHeadings={true}
             headings={headings}

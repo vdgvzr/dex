@@ -14,6 +14,8 @@ import {
 
 import Dex from "../../abis/Dex.json";
 import Link from "../../abis/Link.json";
+import Doge from "../../abis/Doge.json";
+import WrappedBtc from "../../abis/WrappedBtc.json";
 import Web3 from "web3";
 
 const disconnectedState = {
@@ -33,8 +35,10 @@ export const MetaMaskContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [dex, setDex] = useState(null);
   const [link, setLink] = useState(null);
+  const [doge, setDoge] = useState(null);
+  const [wbtc, setWbtc] = useState(null);
   const [owner, setOwner] = useState("0x0");
-  const [tokens, setTokens] = useState("0x0");
+  const [tokens, setTokens] = useState(null);
   const [balances, setBalances] = useState([]);
 
   const clearError = () => setErrorMessage("");
@@ -81,13 +85,23 @@ export const MetaMaskContextProvider = ({ children }) => {
     const networkId = await window.web3.eth.net.getId();
     const dexNetworkData = Dex.networks[networkId];
     const linkNetworkData = Link.networks[networkId];
+    const dogeNetworkData = Doge.networks[networkId];
+    const wbtcNetworkData = WrappedBtc.networks[networkId];
 
-    if (dexNetworkData && linkNetworkData) {
+    if (dexNetworkData) {
       // Get the contracts
       const dex = new window.web3.eth.Contract(Dex.abi, dexNetworkData.address);
       const link = new window.web3.eth.Contract(
         Link.abi,
         linkNetworkData.address
+      );
+      const doge = new window.web3.eth.Contract(
+        Doge.abi,
+        dogeNetworkData.address
+      );
+      const wbtc = new window.web3.eth.Contract(
+        WrappedBtc.abi,
+        wbtcNetworkData.address
       );
 
       // Get global vars
@@ -121,6 +135,18 @@ export const MetaMaskContextProvider = ({ children }) => {
         contract: link,
         available: await link.methods
           .balanceOf(accounts[0], formatToBytes32("LINK"))
+          .call(),
+      });
+      setDoge({
+        contract: doge,
+        available: await doge.methods
+          .balanceOf(accounts[0], formatToBytes32("DOGE"))
+          .call(),
+      });
+      setWbtc({
+        contract: wbtc,
+        available: await wbtc.methods
+          .balanceOf(accounts[0], formatToBytes32("WBTC"))
           .call(),
       });
       setOwner(owner);
@@ -179,6 +205,10 @@ export const MetaMaskContextProvider = ({ children }) => {
     setIsConnecting(false);
   };
 
+  // 0xf4373679Bbfa62b4811Ffd80B13CD41F90DD38aA
+  // 0x767ec179f6a6978D80D711585b9A279e5789C804
+  // 0xc2F90eFd2DB4cC99Ed9D01d43f88B69e621a974a
+
   return (
     <MetaMaskContext.Provider
       value={{
@@ -190,6 +220,8 @@ export const MetaMaskContextProvider = ({ children }) => {
         isLoading,
         dex,
         link,
+        doge,
+        wbtc,
         owner,
         tokens,
         balances,

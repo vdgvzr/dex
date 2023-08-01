@@ -8,8 +8,8 @@
     @extend %handjet;
     background: linear-gradient(
       to right,
-      color(brand, green),
-      color(brand, pink)
+      color(brand, secondary),
+      color(brand, primary)
     );
     -webkit-background-clip: text;
     background-clip: text;
@@ -20,8 +20,8 @@
     &:hover {
       background: linear-gradient(
         to left,
-        color(brand, green),
-        color(brand, pink)
+        color(brand, secondary),
+        color(brand, primary)
       );
       -webkit-background-clip: text;
       background-clip: text;

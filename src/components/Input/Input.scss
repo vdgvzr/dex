@@ -3,12 +3,12 @@
 .form-control {
   background-color: color(canvas);
   border-radius: 0;
-  border: 1px solid color(brand, pink);
+  border: 1px solid color(brand, primary);
   color: color(grey, air);
 
   &:focus {
     background-color: color(canvas);
-    border-color: color(brand, green);
+    border-color: color(brand, secondary);
     color: color(grey, air);
   }
 }
@@ -18,13 +18,13 @@
 .form-input {
   input {
     border-radius: 0%;
-    border: 1px solid color(brand, green);
+    border: 1px solid color(brand, secondary);
     padding: 12px 0.75rem;
   }
 
   &__balance-element {
     &-balance {
-      color: color(brand, green);
+      color: color(brand, secondary);
       text-decoration: underline;
       cursor: pointer;
     }

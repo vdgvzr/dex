@@ -1,0 +1,10 @@
+// Trading Panel
+
+.trading-panel {
+  @extend %sharetech;
+  .icon {
+    fill: white;
+    height: 15px;
+    width: 15px;
+  }
+}

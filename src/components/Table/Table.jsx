@@ -13,7 +13,7 @@ export default function Tbl({ showHeadings = false, headings, rows, classes }) {
         {showHeadings && (
           <thead>
             <tr>
-              {Object.values(headings).map((heading, i) => {
+              {Object.values(headings)?.map((heading, i) => {
                 return (
                   <th className="bg-opaque" key={i}>
                     {heading}
@@ -24,7 +24,7 @@ export default function Tbl({ showHeadings = false, headings, rows, classes }) {
           </thead>
         )}
         <tbody>
-          {rows.map((row, i) => {
+          {rows?.map((row, i) => {
             return (
               <tr key={i}>
                 {Object.values(row).map((data, i) => {

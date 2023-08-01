@@ -6,13 +6,14 @@
   padding: 12px 40px;
   text-transform: uppercase;
   background-color: color(canvas) !important;
-  border-color: color(brand, pink);
-  color: color(brand, pink);
+  border-color: color(brand, primary);
+  color: color(brand, primary);
   @include spaced(5px);
 
+  &__active,
   &:disabled,
   &:hover {
-    background-color: color(brand, pink);
-    color: color(canvas);
+    background-color: color(brand, primary) !important;
+    color: color(canvas) !important;
   }
 }
