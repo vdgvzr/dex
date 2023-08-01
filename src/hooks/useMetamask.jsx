@@ -205,9 +205,9 @@ export const MetaMaskContextProvider = ({ children }) => {
     setIsConnecting(false);
   };
 
-  // 0xf4373679Bbfa62b4811Ffd80B13CD41F90DD38aA
-  // 0x767ec179f6a6978D80D711585b9A279e5789C804
-  // 0xc2F90eFd2DB4cC99Ed9D01d43f88B69e621a974a
+  // console.log(link.contract._address);
+  // console.log(doge.contract._address);
+  // console.log(wbtc.contract._address);
 
   return (
     <MetaMaskContext.Provider

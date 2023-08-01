@@ -25,6 +25,7 @@ contract Wallet is Context, Ownable  {
     }
     
     struct Token {
+        string id;
         bytes32 name;
         bytes32 ticker;
         address tokenAddress;
@@ -41,6 +42,7 @@ contract Wallet is Context, Ownable  {
     constructor() {
         // Initialise with ETH
         addToken(
+            "eth-ethereum",
             0x457468657265756d000000000000000000000000000000000000000000000000, 
             0x4554480000000000000000000000000000000000000000000000000000000000,
             0x0000000000000000000000000000000000000000
@@ -50,10 +52,10 @@ contract Wallet is Context, Ownable  {
     /**
     * @dev Add a token into the tokens mapping
     */
-    function addToken(bytes32 _name, bytes32 _ticker, address _tokenAddress) public onlyOwner() {
-        tokens[_ticker] = Token(_name, _ticker, _tokenAddress);
+    function addToken(string memory _id, bytes32 _name, bytes32 _ticker, address _tokenAddress) public onlyOwner() {
+        tokens[_ticker] = Token(_id, _name, _ticker, _tokenAddress);
         tokenList.push(_ticker);
-        tokenListCount = tokenListCount.add(1);
+        tokenListCount++;
     }
 
     /**

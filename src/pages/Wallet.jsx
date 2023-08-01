@@ -182,12 +182,12 @@ export default function Wallet() {
 
   return (
     <>
-      <Row className="justify-content-center">
+      <Row className="justify-content-center align-items-center main-content">
         <Col
           lg={8}
           md={10}
           xs={12}
-          className="bg-opaque border-brand-primary p-3"
+          className="bg-opaque border-brand-primary p-3 format-container"
         >
           <Tbl
             showHeadings={true}

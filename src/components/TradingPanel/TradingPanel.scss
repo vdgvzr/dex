@@ -2,6 +2,10 @@
 
 .trading-panel {
   @extend %sharetech;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
   .icon {
     fill: white;
     height: 15px;

@@ -1,5 +1,9 @@
 // Input
 
+.form-label {
+  @extend %sharetech;
+}
+
 .form-control {
   background-color: color(canvas);
   border-radius: 0;

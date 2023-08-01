@@ -32,6 +32,11 @@ contract Dex is Wallet {
         return orderBook[_symbol][uint(_orderType)];
     }
 
+    function deleteOrder(uint256 _orderId, bytes32 _symbol, OrderType _orderType) public returns(bool success) {
+        delete orderBook[_symbol][uint(_orderType)][_orderId];
+        return success;
+    }
+
     function createLimitOrder(OrderType _orderType,  bytes32 _symbol, uint256 _amount, uint256 _price) public {
         if (_orderType == OrderType.BUY) {
             require(balances[_msgSender()]["ETH"] >= _amount.mul(_price));

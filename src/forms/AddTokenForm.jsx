@@ -9,12 +9,13 @@ export default function AddTokenForm() {
   const { wallet, dex, loadWeb3 } = useMetaMask();
 
   const tokenNameRef = useRef();
+  const tokenIdRef = useRef();
   const tokenSymbolRef = useRef();
   const tokenAddressRef = useRef();
 
-  function addToken(name, symbol, address) {
+  function addToken(id, name, symbol, address) {
     dex?.methods
-      .addToken(formatToBytes32(name), formatToBytes32(symbol), address)
+      .addToken(id, formatToBytes32(name), formatToBytes32(symbol), address)
       .send({
         from: wallet.accounts[0],
       })
@@ -32,13 +33,24 @@ export default function AddTokenForm() {
       <Form
         onSubmit={(e) => {
           e.preventDefault();
+          const id = tokenIdRef.current.value;
           const name = tokenNameRef.current.value;
           const symbol = tokenSymbolRef.current.value;
           const address = tokenAddressRef.current.value;
 
-          addToken(name, symbol, address);
+          addToken(id, name, symbol, address);
         }}
       >
+        <Input
+          type="text"
+          placeholder="Id"
+          label="Token ID"
+          text="Enter token ID"
+          controlId="addTokenIDValue"
+          innerRef={tokenIdRef}
+          transfer={false}
+          disabled={false}
+        />
         <Input
           type="text"
           placeholder="Name"

@@ -4,6 +4,7 @@ import { useMetaMask } from "../../hooks/useMetamask";
 import axios from "axios";
 import { useState } from "react";
 import { getApi } from "../../api/api";
+import { Col } from "react-bootstrap";
 
 export default function PairPanel({ setSelectedToken }) {
   const { tokens } = useMetaMask();
@@ -47,5 +48,14 @@ export default function PairPanel({ setSelectedToken }) {
     }
   });
 
-  return <Tbl showHeadings headings={headings} rows={rows} />;
+  return (
+    <>
+      <Col className="text-center">
+        <h3>Token Pairs</h3>
+      </Col>
+      <Col>
+        <Tbl showHeadings headings={headings} rows={rows} />
+      </Col>
+    </>
+  );
 }
