@@ -2,7 +2,7 @@ import { Col } from "react-bootstrap";
 import { useMetaMask } from "../hooks/useMetamask";
 import { useEffect, useState } from "react";
 import TradingPanel from "../components/TradingPanel/TradingPanel";
-import { formatBalance, formatFromBytes32, formatToBytes32 } from "../utils";
+import { formatToBytes32 } from "../utils";
 import PairPanel from "../components/PairPanel/PairPanel";
 import OrdersPanel from "../components/OrdersPanel/OrdersPanel";
 

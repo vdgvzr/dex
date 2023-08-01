@@ -125,16 +125,7 @@ export default function TradingPanel({
       </Row>
       <Row>
         <Col>
-          <Input
-            type="number"
-            placeholder="Amount"
-            label="Amount"
-            controlId="amountValue"
-            setInput={setAmountInput}
-            transfer={false}
-            disabled={false}
-          />
-          {orderType === "LIMIT" && (
+          {orderType === "LIMIT" ? (
             <Input
               type="number"
               placeholder="Price"
@@ -144,7 +135,18 @@ export default function TradingPanel({
               transfer={false}
               disabled={false}
             />
+          ) : (
+            <div className="mb-3" style={{ height: "70px" }}></div>
           )}
+          <Input
+            type="number"
+            placeholder="Amount"
+            label="Amount"
+            controlId="amountValue"
+            setInput={setAmountInput}
+            transfer={false}
+            disabled={false}
+          />
         </Col>
       </Row>
       <Row>
