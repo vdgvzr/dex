@@ -35,36 +35,42 @@ export default function Dex() {
   return (
     <>
       <Row className="my-5">
-        <Col xs={3} className="format-container bg-opaque pair-panel">
+        <Col
+          lg={3}
+          xs={12}
+          className="pair-panel bg-opaque p-3 format-container"
+        >
           <PairPanel setSelectedToken={setSelectedToken} />
         </Col>
-        <Col
-          xs={6}
-          className="format-container bg-opaque border-brand-primary p-3 trading-panel"
-        >
-          <TradingPanel
-            orderType={orderType}
-            setOrderType={setOrderType}
-            ORDERTYPE={ORDERTYPE}
-            selectedToken={selectedToken}
-            orderAction={orderAction}
-            setOrderAction={setOrderAction}
-          />
+        <Col lg={6} xs={12} className="trading-panel">
+          <div className="bg-opaque border-brand-primary p-4">
+            <TradingPanel
+              orderType={orderType}
+              setOrderType={setOrderType}
+              ORDERTYPE={ORDERTYPE}
+              selectedToken={selectedToken}
+              orderAction={orderAction}
+              setOrderAction={setOrderAction}
+            />
+          </div>
         </Col>
-        <Col xs={3} className="format-container bg-opaque p-3 order-panel">
+        <Col
+          lg={3}
+          xs={12}
+          className="bg-opaque p-3 order-panel format-container"
+        >
           <OrdersPanel orderBook={orderBook} />
         </Col>
       </Row>
       <Row className="my-5 justify-content-center">
-        <Col
-          xs={6}
-          className="bg-opaque border-brand-primary p-3 user-order-panel"
-        >
-          <UserOrderPanel
-            orderBook={orderBook}
-            selectedToken={selectedToken}
-            orderAction={orderAction}
-          />
+        <Col lg={6} xs={12} className="user-order-panel">
+          <div className="bg-opaque border-brand-primary p-4 format-container">
+            <UserOrderPanel
+              orderBook={orderBook}
+              selectedToken={selectedToken}
+              orderAction={orderAction}
+            />
+          </div>
         </Col>
       </Row>
     </>

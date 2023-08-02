@@ -24,7 +24,7 @@ export default function UserOrderPanel({
         order.trader === window.web3.utils.toChecksumAddress(wallet.accounts[0])
       ) {
         rows.push({
-          orderId: order.id.toString().slice(0, 8),
+          orderId: crypto.randomUUID().slice(0, 8),
           price: formatBalance(window.web3.utils.toWei(order.amount, "ether")),
           amount: formatBalance(window.web3.utils.toWei(order.price, "ether")),
           action: (

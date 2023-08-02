@@ -183,18 +183,15 @@ export default function Wallet() {
   return (
     <>
       <Row className="justify-content-center align-items-center main-content">
-        <Col
-          lg={8}
-          md={10}
-          xs={12}
-          className="bg-opaque border-brand-primary p-3 format-container"
-        >
-          <Tbl
-            showHeadings={true}
-            headings={headings}
-            rows={rows}
-            classes="my-5"
-          />
+        <Col lg={8} md={10} xs={12} className="format-container">
+          <div className="bg-opaque border-brand-primary p-3">
+            <Tbl
+              showHeadings={true}
+              headings={headings}
+              rows={rows}
+              classes="my-5"
+            />
+          </div>
         </Col>
       </Row>
     </>

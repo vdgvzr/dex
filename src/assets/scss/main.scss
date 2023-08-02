@@ -2,16 +2,24 @@ html,
 body {
   background-color: color(canvas);
   color: color(grey, air) !important;
+  background-image: url(logo.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: 175vh;
+
+  font-size: rem(15);
+
+  @include media-breakpoint-down(md) {
+    background-size: 100vh;
+  }
 }
 
 .main-content {
   min-height: calc(100vh - 132px);
 }
 
-.main-content {
-  background-image: url(logo.svg);
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-attachment: fixed;
-  background-size: 175vh;
+.format-container {
+  max-height: 50vh;
+  overflow-y: scroll;
 }

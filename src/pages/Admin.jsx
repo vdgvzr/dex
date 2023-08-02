@@ -5,8 +5,10 @@ export default function Admin() {
   return (
     <>
       <Row className="align-items-center justify-content-center main-content">
-        <Col xs={6} className="p-4 bg-opaque border-brand-primary">
-          <Form type="addToken" />
+        <Col md={6} xs={12} className="p-4">
+          <div className="p-4 bg-opaque border-brand-primary">
+            <Form type="addToken" />
+          </div>
         </Col>
       </Row>
     </>

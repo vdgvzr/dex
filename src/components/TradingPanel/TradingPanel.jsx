@@ -61,7 +61,7 @@ export default function TradingPanel({
   return (
     <>
       <Row className="mb-3">
-        <Col xs={3}>
+        <Col xs={6}>
           <Btn
             text={ORDERTYPE.LIMIT}
             classes={`me-2 w-100 ${
@@ -70,7 +70,7 @@ export default function TradingPanel({
             action={() => setOrderType(ORDERTYPE.LIMIT)}
           />
         </Col>
-        <Col xs={3}>
+        <Col xs={6}>
           <Btn
             text={ORDERTYPE.MARKET}
             classes={`ms-2 w-100 ${
@@ -79,6 +79,24 @@ export default function TradingPanel({
             action={() => setOrderType(ORDERTYPE.MARKET)}
           />
         </Col>
+      </Row>
+      <Row className="mb-3">
+        <Col xs={6}>
+          <Btn
+            text="Buy"
+            classes={`me-2 w-100 ${orderAction === 0 && "custom-btn__active"}`}
+            action={() => setOrderAction(0)}
+          />
+        </Col>
+        <Col xs={6}>
+          <Btn
+            text="Sell"
+            classes={`ms-2 w-100 ${orderAction === 1 && "custom-btn__active"}`}
+            action={() => setOrderAction(1)}
+          />
+        </Col>
+      </Row>
+      <Row className="mb-3">
         <Col
           xs={3}
           className="d-flex align-items-center justify-content-center"
@@ -87,29 +105,14 @@ export default function TradingPanel({
         </Col>
         <Col
           xs={3}
-          className="d-flex align-items-center justify-content-center"
+          className="d-flex align-items-center justify-content-center border-brand-primary p-2"
         >
           <div>
             <Icon icon="eth" />
             {wallet.balance}
           </div>
         </Col>
-      </Row>
-      <Row className="mb-3">
-        <Col xs={3}>
-          <Btn
-            text="Buy"
-            classes={`me-2 w-100 ${orderAction === 0 && "custom-btn__active"}`}
-            action={() => setOrderAction(0)}
-          />
-        </Col>
-        <Col xs={3}>
-          <Btn
-            text="Sell"
-            classes={`ms-2 w-100 ${orderAction === 1 && "custom-btn__active"}`}
-            action={() => setOrderAction(1)}
-          />
-        </Col>
+
         <Col
           xs={3}
           className="d-flex align-items-center justify-content-center"
@@ -118,7 +121,7 @@ export default function TradingPanel({
         </Col>
         <Col
           xs={3}
-          className="d-flex align-items-center justify-content-center"
+          className="d-flex align-items-center justify-content-center border-brand-primary p-2"
         >
           {balance}
         </Col>
@@ -152,6 +155,7 @@ export default function TradingPanel({
       <Row>
         <Col>
           <Btn
+            classes="w-100"
             text={`Submit ${orderType} ${
               orderAction === 0 ? "Buy" : "Sell"
             } order`}
