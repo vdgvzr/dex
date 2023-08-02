@@ -1,8 +1,8 @@
 .navbar {
-  @extend %handjet;
+  @extend %sharetech;
   height: 75px;
   font-size: rem(15);
-  background-color: color(brand, rich-black) !important;
+  background-color: transparent !important;
 
   &-brand {
     @extend %handjet;

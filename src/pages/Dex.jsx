@@ -59,7 +59,7 @@ export default function Dex() {
           xs={12}
           className="bg-opaque p-3 order-panel format-container"
         >
-          <OrdersPanel orderBook={orderBook} />
+          <OrdersPanel orderBook={orderBook} selectedToken={selectedToken} />
         </Col>
       </Row>
       <Row className="my-5 justify-content-center">

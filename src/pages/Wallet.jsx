@@ -6,7 +6,16 @@ import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 
 export default function Wallet() {
-  const { dex, link, doge, wbtc, wallet, loadWeb3, balances } = useMetaMask();
+  const {
+    dex,
+    link,
+    doge,
+    wbtc,
+    wallet,
+    loadWeb3,
+    balances,
+    updateWalletAndAccounts,
+  } = useMetaMask();
 
   const [input, setInput] = useState(0);
   const [showModal, setShowModal] = useState(true);
@@ -108,6 +117,7 @@ export default function Wallet() {
       .once("receipt", (receipt) => {
         console.log(receipt);
         loadWeb3();
+        updateWalletAndAccounts();
         setInput("");
         setShowModal(false);
       })
@@ -125,6 +135,7 @@ export default function Wallet() {
       .once("receipt", (receipt) => {
         console.log(receipt);
         loadWeb3();
+        updateWalletAndAccounts();
         setInput("");
         setShowModal(false);
       })
@@ -154,6 +165,7 @@ export default function Wallet() {
         .once("receipt", (receipt) => {
           console.log(receipt);
           loadWeb3();
+          updateWalletAndAccounts();
           setInput("");
           setShowModal(false);
         })
@@ -172,6 +184,7 @@ export default function Wallet() {
       .once("receipt", (receipt) => {
         console.log(receipt);
         loadWeb3();
+        updateWalletAndAccounts();
         setInput("");
         setShowModal(false);
       })

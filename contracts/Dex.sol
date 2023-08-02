@@ -39,7 +39,7 @@ contract Dex is Wallet {
 
     function createLimitOrder(OrderType _orderType,  bytes32 _symbol, uint256 _amount, uint256 _price) public {
         if (_orderType == OrderType.BUY) {
-            require(balances[_msgSender()]["ETH"] >= _amount.mul(_price));
+            require(balances[_msgSender()]["ETH"] >= _amount.mul(_price.div(100)));
         } else if (_orderType == OrderType.SELL) {
             require(balances[_msgSender()][_symbol] >= _amount);
         }
@@ -47,7 +47,7 @@ contract Dex is Wallet {
         Order[] storage orders = orderBook[_symbol][uint(_orderType)];
 
         orders.push(
-            Order(nextOrderId, _msgSender(), _orderType, _symbol, _amount, _price, 0)
+            Order(nextOrderId, _msgSender(), _orderType, _symbol, _amount, _price.div(100), 0)
         );
 
         // Bubble sort

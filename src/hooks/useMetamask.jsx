@@ -129,6 +129,7 @@ export const MetaMaskContextProvider = ({ children }) => {
           amount: formatBalance(balance),
         });
       }
+
       // Set global state vars
       setDex(dex);
       setLink({
@@ -228,6 +229,7 @@ export const MetaMaskContextProvider = ({ children }) => {
         connectMetaMask,
         clearError,
         loadWeb3,
+        updateWalletAndAccounts,
       }}
     >
       {children}

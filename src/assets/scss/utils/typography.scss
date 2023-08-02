@@ -7,6 +7,7 @@ h4,
 h5,
 h6 {
   @extend %handjet;
+  @include spaced(5px);
 }
 
 a {

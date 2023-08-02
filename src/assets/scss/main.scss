@@ -2,11 +2,11 @@ html,
 body {
   background-color: color(canvas);
   color: color(grey, air) !important;
-  background-image: url(logo.svg);
+  /* background-image: url(logo.svg);
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
-  background-size: 175vh;
+  background-size: 200vh; */
 
   font-size: rem(15);
 
@@ -17,6 +17,24 @@ body {
 
 .main-content {
   min-height: calc(100vh - 132px);
+  z-index: 999;
+  position: relative;
+}
+
+.main-logo {
+  position: fixed;
+  z-index: 0;
+  height: 195vh;
+  top: -45%;
+  left: -13.5%;
+
+  .logo-stop-primary {
+    stop-color: $primary-color;
+  }
+
+  .logo-stop-secondary {
+    stop-color: $secondary-color;
+  }
 }
 
 .format-container {

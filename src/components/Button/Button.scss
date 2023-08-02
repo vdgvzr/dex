@@ -2,6 +2,7 @@
 
 .custom-btn {
   @extend %handjet;
+  @include spaced(5px);
   border-radius: 0;
   padding: 12px 40px;
   text-transform: uppercase;

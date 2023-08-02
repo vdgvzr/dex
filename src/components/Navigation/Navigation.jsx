@@ -7,6 +7,7 @@ import { formatAddress, formatChainAsNum } from "../../utils";
 import Btn from "../Button/Button";
 import Icon from "../Icon/Icon";
 import { Link } from "react-router-dom";
+import Logo from "../Logo";
 
 function Navigation() {
   const { wallet, hasProvider, isConnecting, connectMetaMask, owner } =

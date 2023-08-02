@@ -4,7 +4,7 @@ import Icon from "../Icon/Icon";
 import { useMetaMask } from "../../hooks/useMetamask";
 import Input from "../Input/Input";
 import { formatToBytes32 } from "../../utils";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function TradingPanel({
   orderType,
@@ -14,6 +14,8 @@ export default function TradingPanel({
   orderAction,
   setOrderAction,
 }) {
+  const inputHeightref = useRef();
+
   const { wallet, dex, loadWeb3, balances } = useMetaMask();
 
   const [amountInput, setAmountInput] = useState(0);
@@ -30,7 +32,7 @@ export default function TradingPanel({
 
   function createLimitOrder(from, orderType, symbol, amount, price) {
     dex?.methods
-      .createLimitOrder(orderType, symbol, amount, price)
+      .createLimitOrder(orderType, symbol, parseInt(price * 100), amount)
       .send({
         from,
       })
@@ -60,6 +62,11 @@ export default function TradingPanel({
 
   return (
     <>
+      <Row>
+        <Col className="text-center mb-4">
+          <h3>Trade {selectedToken}/ETH</h3>
+        </Col>
+      </Row>
       <Row className="mb-3">
         <Col xs={6}>
           <Btn
@@ -101,6 +108,18 @@ export default function TradingPanel({
           xs={3}
           className="d-flex align-items-center justify-content-center"
         >
+          <div>{selectedToken}</div>
+        </Col>
+        <Col
+          xs={3}
+          className="d-flex align-items-center justify-content-center border-brand-primary p-2"
+        >
+          {balance}
+        </Col>
+        <Col
+          xs={3}
+          className="d-flex align-items-center justify-content-center"
+        >
           <div>ETH</div>
         </Col>
         <Col
@@ -111,19 +130,6 @@ export default function TradingPanel({
             <Icon icon="eth" />
             {wallet.balance}
           </div>
-        </Col>
-
-        <Col
-          xs={3}
-          className="d-flex align-items-center justify-content-center"
-        >
-          <div>{selectedToken}</div>
-        </Col>
-        <Col
-          xs={3}
-          className="d-flex align-items-center justify-content-center border-brand-primary p-2"
-        >
-          {balance}
         </Col>
       </Row>
       <Row>
@@ -139,17 +145,22 @@ export default function TradingPanel({
               disabled={false}
             />
           ) : (
-            <div className="mb-3" style={{ height: "70px" }}></div>
+            <div
+              className="mb-3"
+              style={{ height: inputHeightref.current.offsetHeight }}
+            ></div>
           )}
-          <Input
-            type="number"
-            placeholder="Amount"
-            label="Amount"
-            controlId="amountValue"
-            setInput={setAmountInput}
-            transfer={false}
-            disabled={false}
-          />
+          <div ref={inputHeightref}>
+            <Input
+              type="number"
+              placeholder="Amount"
+              label="Amount"
+              controlId="amountValue"
+              setInput={setAmountInput}
+              transfer={false}
+              disabled={false}
+            />
+          </div>
         </Col>
       </Row>
       <Row>

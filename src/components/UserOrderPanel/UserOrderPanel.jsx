@@ -11,10 +11,9 @@ export default function UserOrderPanel({
   const { dex, wallet, loadWeb3 } = useMetaMask();
 
   const headings = {
-    0: "Order Id",
-    1: "Price",
-    2: "Amount",
-    3: "Action",
+    0: "Price",
+    1: "Amount",
+    2: "Action",
   };
 
   const rows = [];
@@ -24,9 +23,12 @@ export default function UserOrderPanel({
         order.trader === window.web3.utils.toChecksumAddress(wallet.accounts[0])
       ) {
         rows.push({
-          orderId: crypto.randomUUID().slice(0, 8),
-          price: formatBalance(window.web3.utils.toWei(order.amount, "ether")),
-          amount: formatBalance(window.web3.utils.toWei(order.price, "ether")),
+          price:
+            "$" + formatBalance(window.web3.utils.toWei(order.amount, "ether")),
+          amount:
+            formatBalance(window.web3.utils.toWei(order.price, "ether")) +
+            " " +
+            selectedToken,
           action: (
             <a
               onClick={() =>
@@ -46,8 +48,9 @@ export default function UserOrderPanel({
   }
 
   function deleteOrder(id, ticker, orderType) {
+    console.log(parseInt(id), ticker, orderType);
     dex?.methods
-      .deleteOrder(id, ticker, orderType)
+      .deleteOrder(parseInt(id), ticker, orderType)
       .send({
         from: wallet.accounts[0],
       })
@@ -63,7 +66,7 @@ export default function UserOrderPanel({
   return (
     <>
       <Col>
-        <h3>
+        <h3 className="text-center">
           Your {selectedToken} {orderAction === 0 ? "Buy" : "Sell"} Orders
         </h3>
       </Col>

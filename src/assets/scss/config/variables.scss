@@ -5,6 +5,9 @@
 // Borders
 
 // Colours
+$primary-color: hsl(332, 87%, 70%);
+$secondary-color: hsl(179, 86%, 47%);
+
 $palettes: (
   black: (
     base: #000000,
@@ -28,8 +31,8 @@ $palettes: (
     charcoal: #262525,
   ),
   brand: (
-    primary: hsl(332, 87%, 70%),
-    secondary: hsl(179, 86%, 47%),
+    primary: $primary-color,
+    secondary: $secondary-color,
     rich-black: #0d1b2a,
   ),
 );
