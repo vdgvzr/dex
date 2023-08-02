@@ -3,12 +3,14 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { PAGES } from "../../router";
 import { useMetaMask } from "../../hooks/useMetamask";
-import { formatAddress, formatChainAsNum } from "../../utils";
+import { formatAddress } from "../../utils";
 import Btn from "../Button/Button";
 import Icon from "../Icon/Icon";
 import { Link } from "react-router-dom";
+import Input from "../Input/Input";
+import { NavDropdown } from "react-bootstrap";
 
-function Navigation() {
+function Navigation({ setTheme }) {
   const { wallet, hasProvider, isConnecting, connectMetaMask, owner } =
     useMetaMask();
 
@@ -17,6 +19,29 @@ function Navigation() {
       return owner.toUpperCase() === wallet.accounts[0].toUpperCase();
     }
   }
+
+  const themes = [
+    {
+      name: "Default",
+      primary: "hsl(332, 87%, 70%)",
+      secondary: "hsl(179, 86%, 47%)",
+    },
+    {
+      name: "Synthwave",
+      primary: "#ff19e8",
+      secondary: "#ff901f",
+    },
+    {
+      name: "Vaporwave",
+      primary: "#ffd319",
+      secondary: "#03fff0",
+    },
+    {
+      name: "Pit Viper",
+      primary: "#3be528",
+      secondary: "#B026FF",
+    },
+  ];
 
   return (
     <Navbar variant="dark" expand="lg" className="">
@@ -27,15 +52,17 @@ function Navigation() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav>
-            {PAGES.map((page, index) => {
-              if (page.name !== "Admin" || isOwner(wallet, owner)) {
-                return (
-                  <Link className="nav-link" key={index} to={page.url}>
-                    {page.name}
-                  </Link>
-                );
-              }
-            })}
+            {window.ethereum?.isMetaMask &&
+              !wallet.accounts.length < 1 &&
+              PAGES.map((page, index) => {
+                if (page.name !== "Admin" || isOwner(wallet, owner)) {
+                  return (
+                    <Link className="nav-link" key={index} to={page.url}>
+                      {page.name}
+                    </Link>
+                  );
+                }
+              })}
             {!hasProvider && (
               <Link
                 className="nav-link"
@@ -55,6 +82,24 @@ function Navigation() {
             )}
             {hasProvider && wallet.accounts.length > 0 && (
               <>
+                <NavDropdown title="Theme" id="basic-nav-dropdown">
+                  {themes.map((theme, i) => {
+                    return (
+                      <NavDropdown.Item
+                        className="border-brand-primary"
+                        onClick={() => {
+                          setTheme({
+                            primary: theme.primary,
+                            secondary: theme.secondary,
+                          });
+                        }}
+                        key={i}
+                      >
+                        {theme.name}
+                      </NavDropdown.Item>
+                    );
+                  })}
+                </NavDropdown>
                 <Link
                   className="nav-link navbar__wallet-info disabled"
                   disabled={true}

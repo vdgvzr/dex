@@ -112,7 +112,7 @@ export default function TradingPanel({
         </Col>
         <Col
           xs={3}
-          className="d-flex align-items-center justify-content-center border-brand-primary p-2"
+          className="d-flex align-items-center justify-content-center py-2"
         >
           {balance}
         </Col>
@@ -124,7 +124,7 @@ export default function TradingPanel({
         </Col>
         <Col
           xs={3}
-          className="d-flex align-items-center justify-content-center border-brand-primary p-2"
+          className="d-flex align-items-center justify-content-center py-2"
         >
           <div>
             <Icon icon="eth" />

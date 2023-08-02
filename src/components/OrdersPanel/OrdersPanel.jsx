@@ -31,7 +31,6 @@ export default function PairPanel({ orderBook, selectedToken }) {
       index === self.findIndex((order) => order.price === value.price)
   );
 
-  console.log(orders);
   const percentage = orders.reduce(function (acc, value) {
     return acc + value.amount;
   }, 0);

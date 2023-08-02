@@ -4,15 +4,30 @@ import Navigation from "./components/Navigation/Navigation";
 import { Container } from "react-bootstrap";
 import Footer from "./components/Footer/Footer";
 import Logo from "./components/Logo";
+import { useState } from "react";
 
 function App() {
+  const [theme, setTheme] = useState({
+    primary: "hsl(332, 87%, 70%)",
+    secondary: "hsl(179, 86%, 47%)",
+  });
+
+  document.documentElement.style.setProperty(
+    "--primary-color",
+    `${theme.primary}`
+  );
+  document.documentElement.style.setProperty(
+    "--secondary-color",
+    `${theme.secondary}`
+  );
+
   return (
     <>
       <MetaMaskContextProvider>
         <div className="main-logo-container">
           <Logo />
         </div>
-        <Navigation />
+        <Navigation setTheme={setTheme} />
         <ScrollRestoration />
         <Container className="main-content">
           <Outlet />

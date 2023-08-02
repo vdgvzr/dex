@@ -34,11 +34,11 @@ body {
   }
 
   .logo-stop-primary {
-    stop-color: $primary-color;
+    stop-color: var(--primary-color);
   }
 
   .logo-stop-secondary {
-    stop-color: $secondary-color;
+    stop-color: var(--secondary-color);
   }
 }
 

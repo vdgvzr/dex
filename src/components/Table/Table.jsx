@@ -35,12 +35,12 @@ export default function Tbl({ showHeadings = false, headings, rows, classes }) {
                   );
                 })}
                 {row.percentage && (
-                  <span
+                  <td
                     className="table-percentage-indicator"
                     style={{
                       width: `${row.percentage}%`,
                     }}
-                  ></span>
+                  ></td>
                 )}
               </tr>
             );

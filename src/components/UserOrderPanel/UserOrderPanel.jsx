@@ -48,7 +48,6 @@ export default function UserOrderPanel({
   }
 
   function deleteOrder(id, ticker, orderType) {
-    console.log(parseInt(id), ticker, orderType);
     dex?.methods
       .deleteOrder(parseInt(id), ticker, orderType)
       .send({
