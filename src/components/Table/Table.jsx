@@ -29,11 +29,19 @@ export default function Tbl({ showHeadings = false, headings, rows, classes }) {
               <tr key={i}>
                 {Object.values(row).map((data, i) => {
                   return (
-                    <td className="bg-opaque" key={i}>
+                    <td className="bg-transparent" key={i}>
                       {data}
                     </td>
                   );
                 })}
+                {row.percentage && (
+                  <span
+                    className="table-percentage-indicator"
+                    style={{
+                      width: `${row.percentage}%`,
+                    }}
+                  ></span>
+                )}
               </tr>
             );
           })}

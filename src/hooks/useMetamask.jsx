@@ -11,6 +11,7 @@ import {
   formatFromBytes32,
   formatToBytes32,
 } from "../utils/index";
+import { ethers } from "ethers";
 
 import Dex from "../../abis/Dex.json";
 import Link from "../../abis/Link.json";
@@ -61,9 +62,15 @@ export const MetaMaskContextProvider = ({ children }) => {
         params: [accounts[0], "latest"],
       })
     );
-    const chainId = await window.ethereum.request({
+
+    /* let chainId = await window.ethereum.request({
       method: "eth_chainId",
-    });
+    }); */
+
+    let userProvider = new ethers.BrowserProvider(window.ethereum);
+    let objectNetwork = await userProvider.getNetwork();
+    let networkName = objectNetwork.name;
+    const chainId = networkName.charAt(0).toUpperCase() + networkName.slice(1);
 
     setWallet({ accounts, balance, chainId });
   }, []);

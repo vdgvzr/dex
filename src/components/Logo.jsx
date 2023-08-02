@@ -7,6 +7,7 @@ export default function Logo() {
         xmlnsXlink="http://www.w3.org/1999/xlink"
         viewBox="0 0 800 800"
         className="main-logo"
+        preserveAspectRatio="xMidYMid meet"
       >
         <defs>
           <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="nnneon-grad">

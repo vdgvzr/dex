@@ -24,9 +24,9 @@ export default function UserOrderPanel({
       ) {
         rows.push({
           price:
-            "$" + formatBalance(window.web3.utils.toWei(order.amount, "ether")),
+            "$" + formatBalance(window.web3.utils.toWei(order.price, "ether")),
           amount:
-            formatBalance(window.web3.utils.toWei(order.price, "ether")) +
+            formatBalance(window.web3.utils.toWei(order.amount, "ether")) +
             " " +
             selectedToken,
           action: (

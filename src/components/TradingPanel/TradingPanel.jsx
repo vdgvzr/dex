@@ -32,7 +32,7 @@ export default function TradingPanel({
 
   function createLimitOrder(from, orderType, symbol, amount, price) {
     dex?.methods
-      .createLimitOrder(orderType, symbol, parseInt(price * 100), amount)
+      .createLimitOrder(orderType, symbol, amount, parseInt(price * 100))
       .send({
         from,
       })

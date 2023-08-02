@@ -8,5 +8,17 @@
 
   tr {
     border-bottom: 1px solid color(grey, mist);
+    position: relative;
+    z-index: 99999;
+  }
+
+  .table-percentage-indicator {
+    position: absolute;
+    right: 0;
+    bottom: 25%;
+    height: 50%;
+    background-color: color(brand, primary);
+    z-index: -1;
+    opacity: 0.4;
   }
 }

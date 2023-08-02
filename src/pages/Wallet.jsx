@@ -22,9 +22,10 @@ export default function Wallet() {
 
   const headings = {
     0: "Coin",
-    1: `${import.meta.env.VITE_SITE_NAME} Balance`,
-    2: "Metamask Balance",
-    3: "Action",
+    1: "In order",
+    2: "Available Balance",
+    3: "Metamask Balance",
+    4: "Action",
   };
 
   const rows = [];
@@ -50,6 +51,7 @@ export default function Wallet() {
 
     rows.push({
       coin: balance.coin,
+      inOrder: "",
       amount: balance.amount,
       available:
         balance.coin === "ETH"

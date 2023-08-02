@@ -22,11 +22,16 @@ body {
 }
 
 .main-logo {
-  position: fixed;
-  z-index: 0;
-  height: 195vh;
-  top: -45%;
-  left: -13.5%;
+  &-container {
+    height: 150vh;
+    width: 150vh;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+  }
 
   .logo-stop-primary {
     stop-color: $primary-color;

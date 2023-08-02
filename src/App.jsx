@@ -9,7 +9,9 @@ function App() {
   return (
     <>
       <MetaMaskContextProvider>
-        <Logo />
+        <div className="main-logo-container">
+          <Logo />
+        </div>
         <Navigation />
         <ScrollRestoration />
         <Container className="main-content">
