@@ -3,7 +3,7 @@ import Btn from "../Button/Button";
 import Icon from "../Icon/Icon";
 import { useMetaMask } from "../../hooks/useMetamask";
 import Input from "../Input/Input";
-import { formatToBytes32 } from "../../utils";
+import { formatToBytes32, formatFromBytes32 } from "../../utils";
 import { useEffect, useRef, useState } from "react";
 
 export default function TradingPanel({
@@ -16,7 +16,14 @@ export default function TradingPanel({
 }) {
   const inputHeightref = useRef();
 
-  const { wallet, dex, loadWeb3, balances } = useMetaMask();
+  const {
+    wallet,
+    dex,
+    loadWeb3,
+    balances,
+    setErrorMessage,
+    setSuccessMessage,
+  } = useMetaMask();
 
   const [amountInput, setAmountInput] = useState(0);
   const [priceInput, setPriceInput] = useState(0);
@@ -36,12 +43,18 @@ export default function TradingPanel({
       .send({
         from,
       })
-      .once("receipt", (receipt) => {
-        console.log(receipt);
+      .once("receipt", () => {
+        setSuccessMessage(
+          `Created ${
+            orderType === 0 ? "buy" : "sell"
+          } limit order for: ${amount} ${formatFromBytes32(
+            symbol
+          )} at $${price}`
+        );
         loadWeb3();
       })
       .catch((e) => {
-        console.error(e);
+        setErrorMessage(e.message);
       });
   }
 
@@ -51,12 +64,17 @@ export default function TradingPanel({
       .send({
         from,
       })
-      .once("receipt", (receipt) => {
-        console.log(receipt);
+      .once("receipt", () => {
+        setSuccessMessage(
+          `Created ${
+            orderType === 0 ? "buy" : "sell"
+          } limit order for: ${amount} ${formatFromBytes32(symbol)}`
+        );
+        loadWeb3();
         loadWeb3();
       })
       .catch((e) => {
-        console.error(e);
+        setErrorMessage(e.message);
       });
   }
 
@@ -71,18 +89,14 @@ export default function TradingPanel({
         <Col xs={6}>
           <Btn
             text={ORDERTYPE.LIMIT}
-            classes={`me-2 w-100 ${
-              orderType === "LIMIT" && "custom-btn__active"
-            }`}
+            classes={`w-100 ${orderType === "LIMIT" && "custom-btn__active"}`}
             action={() => setOrderType(ORDERTYPE.LIMIT)}
           />
         </Col>
         <Col xs={6}>
           <Btn
             text={ORDERTYPE.MARKET}
-            classes={`ms-2 w-100 ${
-              orderType === "MARKET" && "custom-btn__active"
-            }`}
+            classes={`w-100 ${orderType === "MARKET" && "custom-btn__active"}`}
             action={() => setOrderType(ORDERTYPE.MARKET)}
           />
         </Col>
@@ -91,14 +105,14 @@ export default function TradingPanel({
         <Col xs={6}>
           <Btn
             text="Buy"
-            classes={`me-2 w-100 ${orderAction === 0 && "custom-btn__active"}`}
+            classes={`w-100 ${orderAction === 0 && "custom-btn__active"}`}
             action={() => setOrderAction(0)}
           />
         </Col>
         <Col xs={6}>
           <Btn
             text="Sell"
-            classes={`ms-2 w-100 ${orderAction === 1 && "custom-btn__active"}`}
+            classes={`w-100 ${orderAction === 1 && "custom-btn__active"}`}
             action={() => setOrderAction(1)}
           />
         </Col>

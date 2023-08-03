@@ -1,4 +1,8 @@
+import { useMetaMask } from "../hooks/useMetamask";
+
 export default function Logo() {
+  const { error, success } = useMetaMask();
+
   return (
     <>
       <svg
@@ -12,12 +16,28 @@ export default function Logo() {
         <defs>
           <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="nnneon-grad">
             <stop
-              className="logo-stop-secondary"
+              style={{
+                stopColor: `${
+                  error
+                    ? "var(--bs-danger)"
+                    : success
+                    ? "var(--bs-success)"
+                    : "var(--secondary-color)"
+                }`,
+              }}
               stopOpacity="1"
               offset="0%"
             ></stop>
             <stop
-              className="logo-stop-primary"
+              style={{
+                stopColor: `${
+                  error
+                    ? "var(--bs-danger)"
+                    : success
+                    ? "var(--bs-success)"
+                    : "var(--primary-color)"
+                }`,
+              }}
               stopOpacity="1"
               offset="100%"
             ></stop>

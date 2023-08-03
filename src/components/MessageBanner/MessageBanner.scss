@@ -1,0 +1,10 @@
+// Message banner
+
+.message-banner {
+  @extend %sharetech;
+  position: absolute;
+  width: 100%;
+  padding: 6px 0;
+  background-color: red;
+  z-index: 999999999;
+}

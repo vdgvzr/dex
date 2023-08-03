@@ -1,19 +1,9 @@
 import { Container } from "react-bootstrap";
-import { useMetaMask } from "../../hooks/useMetamask";
 
 function Footer() {
-  let { error, errorMessage, clearError } = useMetaMask();
-
   return (
     <footer className="footer text-center p-3 sticky bg-dark text-light">
       <Container>
-        <div className="" style={error ? { backgroundColor: "red" } : {}}>
-          {error && (
-            <div onClick={clearError}>
-              <strong>Error:</strong> {errorMessage}
-            </div>
-          )}
-        </div>
         &copy; {new Date().getFullYear()} Copyright:{" "}
         <a
           className="ms-2"

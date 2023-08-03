@@ -5,6 +5,7 @@ import { Container } from "react-bootstrap";
 import Footer from "./components/Footer/Footer";
 import Logo from "./components/Logo";
 import { useState } from "react";
+import MessageBanner from "./components/MessageBanner/MessageBanner";
 
 function App() {
   const [theme, setTheme] = useState({
@@ -28,6 +29,7 @@ function App() {
           <Logo />
         </div>
         <Navigation setTheme={setTheme} />
+        <MessageBanner />
         <ScrollRestoration />
         <Container className="main-content">
           <Outlet />

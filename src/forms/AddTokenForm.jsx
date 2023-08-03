@@ -6,7 +6,8 @@ import { useMetaMask } from "../hooks/useMetamask";
 import { formatToBytes32 } from "../utils";
 
 export default function AddTokenForm() {
-  const { wallet, dex, loadWeb3 } = useMetaMask();
+  const { wallet, dex, loadWeb3, setErrorMessage, setSuccessMessage } =
+    useMetaMask();
 
   const tokenNameRef = useRef();
   const tokenIdRef = useRef();
@@ -19,12 +20,12 @@ export default function AddTokenForm() {
       .send({
         from: wallet.accounts[0],
       })
-      .once("receipt", (receipt) => {
-        console.log(receipt);
+      .once("receipt", () => {
+        setSuccessMessage(`Successfully added ${symbol}!`);
         loadWeb3();
       })
       .catch((e) => {
-        console.error(e);
+        setErrorMessage(e.message);
       });
   }
 

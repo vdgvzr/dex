@@ -32,6 +32,7 @@ export const MetaMaskContextProvider = ({ children }) => {
   const [hasProvider, setHasProvider] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [wallet, setWallet] = useState(disconnectedState);
   const [isLoading, setIsLoading] = useState(false);
   const [dex, setDex] = useState(null);
@@ -43,6 +44,19 @@ export const MetaMaskContextProvider = ({ children }) => {
   const [balances, setBalances] = useState([]);
 
   const clearError = () => setErrorMessage("");
+  const clearSuccess = () => setSuccessMessage("");
+
+  useEffect(() => {
+    setTimeout(() => {
+      clearError();
+    }, 5000);
+  }, [errorMessage]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      clearSuccess();
+    }, 5000);
+  }, [successMessage]);
 
   // useCallback ensures that we don't uselessly re-create the _updateWallet function on every render
   const _updateWallet = useCallback(async (providedAccounts) => {
@@ -207,6 +221,7 @@ export const MetaMaskContextProvider = ({ children }) => {
       });
       clearError();
       updateWallet(accounts);
+      setSuccessMessage("Metamask connected!");
     } catch (err) {
       setErrorMessage(err.message);
     }
@@ -223,7 +238,9 @@ export const MetaMaskContextProvider = ({ children }) => {
         wallet,
         hasProvider,
         error: !!errorMessage,
+        success: !!successMessage,
         errorMessage,
+        successMessage,
         isConnecting,
         isLoading,
         dex,
@@ -235,8 +252,11 @@ export const MetaMaskContextProvider = ({ children }) => {
         balances,
         connectMetaMask,
         clearError,
+        clearSuccess,
         loadWeb3,
         updateWalletAndAccounts,
+        setErrorMessage,
+        setSuccessMessage,
       }}
     >
       {children}

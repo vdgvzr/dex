@@ -1,6 +1,6 @@
 import { useMetaMask } from "../hooks/useMetamask";
 import Tbl from "../components/Table/Table";
-import { formatToBytes32 } from "../utils";
+import { formatToBytes32, formatFromBytes32 } from "../utils";
 import WalletModal from "../components/WalletModal/WalletModal";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
@@ -15,6 +15,8 @@ export default function Wallet() {
     loadWeb3,
     balances,
     updateWalletAndAccounts,
+    setErrorMessage,
+    setSuccessMessage,
   } = useMetaMask();
 
   const [input, setInput] = useState(0);
@@ -116,15 +118,18 @@ export default function Wallet() {
         from,
         value,
       })
-      .once("receipt", (receipt) => {
-        console.log(receipt);
+      .once("receipt", () => {
+        setSuccessMessage(
+          `Deposited ${window.web3.utils.fromWei(value, "ether")} ETH!`
+        );
         loadWeb3();
         updateWalletAndAccounts();
         setInput("");
         setShowModal(false);
       })
       .catch((e) => {
-        console.error(e);
+        setErrorMessage(e.message);
+        setShowModal(false);
       });
   }
 
@@ -134,15 +139,18 @@ export default function Wallet() {
       .send({
         from,
       })
-      .once("receipt", (receipt) => {
-        console.log(receipt);
+      .once("receipt", () => {
+        setSuccessMessage(
+          `Withdrew ${window.web3.utils.fromWei(value, "ether")} ETH!`
+        );
         loadWeb3();
         updateWalletAndAccounts();
         setInput("");
         setShowModal(false);
       })
       .catch((e) => {
-        console.error(e);
+        setErrorMessage(e.message);
+        setShowModal(false);
       });
   }
 
@@ -150,12 +158,12 @@ export default function Wallet() {
     contract?.methods
       .approve(dex?._address, amount)
       .send({ from })
-      .once("receipt", (receipt) => {
-        console.log(receipt);
+      .once("receipt", () => {
         _deposit();
       })
       .catch((e) => {
-        console.error(e);
+        setErrorMessage(e.message);
+        setShowModal(false);
       });
 
     function _deposit() {
@@ -164,15 +172,21 @@ export default function Wallet() {
         .send({
           from,
         })
-        .once("receipt", (receipt) => {
-          console.log(receipt);
+        .once("receipt", () => {
+          setSuccessMessage(
+            `Deposited ${window.web3.utils.fromWei(
+              amount,
+              "ether"
+            )} ${formatFromBytes32(ticker)}!`
+          );
           loadWeb3();
           updateWalletAndAccounts();
           setInput("");
           setShowModal(false);
         })
         .catch((e) => {
-          console.error(e);
+          setErrorMessage(e.message);
+          setShowModal(false);
         });
     }
   }
@@ -183,15 +197,21 @@ export default function Wallet() {
       .send({
         from,
       })
-      .once("receipt", (receipt) => {
-        console.log(receipt);
+      .once("receipt", () => {
+        setSuccessMessage(
+          `Widthrew ${window.web3.utils.fromWei(
+            amount,
+            "ether"
+          )} ${formatFromBytes32(ticker)}!`
+        );
         loadWeb3();
         updateWalletAndAccounts();
         setInput("");
         setShowModal(false);
       })
       .catch((e) => {
-        console.error(e);
+        setErrorMessage(e.message);
+        setShowModal(false);
       });
   }
 
