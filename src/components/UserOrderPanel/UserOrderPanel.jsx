@@ -19,30 +19,34 @@ export default function UserOrderPanel({
   const rows = [];
   {
     orderBook.map((order) => {
-      if (
-        order.trader === window.web3.utils.toChecksumAddress(wallet.accounts[0])
-      ) {
-        rows.push({
-          price:
-            "$" + formatBalance(window.web3.utils.toWei(order.price, "ether")),
-          amount:
-            formatBalance(window.web3.utils.toWei(order.amount, "ether")) +
-            " " +
-            selectedToken,
-          action: (
-            <a
-              onClick={() =>
-                deleteOrder(
-                  order.id,
-                  formatToBytes32(selectedToken),
-                  orderAction
-                )
-              }
-            >
-              Delete order
-            </a>
-          ),
-        });
+      if (wallet.accounts[0] != undefined) {
+        if (
+          order.trader ===
+          window.web3.utils.toChecksumAddress(wallet?.accounts[0])
+        ) {
+          rows.push({
+            price:
+              "$" +
+              formatBalance(window.web3.utils.toWei(order.price, "ether")),
+            amount:
+              formatBalance(window.web3.utils.toWei(order.amount, "ether")) +
+              " " +
+              selectedToken,
+            action: (
+              <a
+                onClick={() =>
+                  deleteOrder(
+                    order.id,
+                    formatToBytes32(selectedToken),
+                    orderAction
+                  )
+                }
+              >
+                Delete order
+              </a>
+            ),
+          });
+        }
       }
     });
   }

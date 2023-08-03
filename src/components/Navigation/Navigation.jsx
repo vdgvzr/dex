@@ -52,17 +52,33 @@ function Navigation({ setTheme }) {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav>
-            {window.ethereum?.isMetaMask &&
-              !wallet.accounts.length < 1 &&
-              PAGES.map((page, index) => {
-                if (page.name !== "Admin" || isOwner(wallet, owner)) {
-                  return (
-                    <Link className="nav-link" key={index} to={page.url}>
-                      {page.name}
-                    </Link>
-                  );
-                }
+            {PAGES.map((page, index) => {
+              if (page.name !== "Admin" || isOwner(wallet, owner)) {
+                return (
+                  <Link className="nav-link" key={index} to={page.url}>
+                    {page.name}
+                  </Link>
+                );
+              }
+            })}
+            <NavDropdown title="Theme" id="basic-nav-dropdown" className="me-4">
+              {themes.map((theme, i) => {
+                return (
+                  <NavDropdown.Item
+                    className="border-brand-primary"
+                    onClick={() => {
+                      setTheme({
+                        primary: theme.primary,
+                        secondary: theme.secondary,
+                      });
+                    }}
+                    key={i}
+                  >
+                    {theme.name}
+                  </NavDropdown.Item>
+                );
               })}
+            </NavDropdown>
             {!hasProvider && (
               <Link
                 className="nav-link"
@@ -82,24 +98,6 @@ function Navigation({ setTheme }) {
             )}
             {hasProvider && wallet.accounts.length > 0 && (
               <>
-                <NavDropdown title="Theme" id="basic-nav-dropdown">
-                  {themes.map((theme, i) => {
-                    return (
-                      <NavDropdown.Item
-                        className="border-brand-primary"
-                        onClick={() => {
-                          setTheme({
-                            primary: theme.primary,
-                            secondary: theme.secondary,
-                          });
-                        }}
-                        key={i}
-                      >
-                        {theme.name}
-                      </NavDropdown.Item>
-                    );
-                  })}
-                </NavDropdown>
                 <Link
                   className="nav-link navbar__wallet-info disabled"
                   disabled={true}

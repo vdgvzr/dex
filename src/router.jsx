@@ -4,6 +4,7 @@ import Dex from "./pages/Dex";
 import Wallet from "./pages/Wallet";
 import Admin from "./pages/Admin";
 import Home from "./pages/Home";
+import Error from "./pages/Error";
 
 export const router = createBrowserRouter([
   {
@@ -11,7 +12,7 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        errorElement: <h1>There has been an error</h1>,
+        errorElement: <Error />,
         children: [
           { index: true, element: <Home /> },
           {
@@ -26,14 +27,6 @@ export const router = createBrowserRouter([
             path: "wallet",
             element: <Wallet />,
           },
-          /* 
-          {
-            path: "transfer-requests",
-            children: [
-              { index: true, element: <TransferRequests /> },
-              { path: ":transferId", ...transferRoute },
-            ],
-          }, */
           { path: "*", element: <h1>Page not found</h1> },
         ],
       },

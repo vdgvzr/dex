@@ -140,37 +140,41 @@ export const MetaMaskContextProvider = ({ children }) => {
 
       /////////// Balances
       const balancesList = [];
-      for (let i = 0; i < tokenList.length; i++) {
-        const balance = await dex?.methods
-          .balances(accounts[0], tokenList[i].ticker)
-          .call();
+      if (accounts[0] != undefined) {
+        for (let i = 0; i < tokenList.length; i++) {
+          const balance = await dex?.methods
+            .balances(accounts[0], tokenList[i].ticker)
+            .call();
 
-        balancesList.push({
-          coin: formatFromBytes32(tokenList[i].ticker),
-          amount: formatBalance(balance),
-        });
+          balancesList.push({
+            coin: formatFromBytes32(tokenList[i].ticker),
+            amount: formatBalance(balance),
+          });
+        }
       }
 
       // Set global state vars
       setDex(dex);
-      setLink({
-        contract: link,
-        available: await link.methods
-          .balanceOf(accounts[0], formatToBytes32("LINK"))
-          .call(),
-      });
-      setDoge({
-        contract: doge,
-        available: await doge.methods
-          .balanceOf(accounts[0], formatToBytes32("DOGE"))
-          .call(),
-      });
-      setWbtc({
-        contract: wbtc,
-        available: await wbtc.methods
-          .balanceOf(accounts[0], formatToBytes32("WBTC"))
-          .call(),
-      });
+      if (accounts[0] != undefined) {
+        setLink({
+          contract: link,
+          available: await link.methods
+            .balanceOf(accounts[0], formatToBytes32("LINK"))
+            .call(),
+        });
+        setDoge({
+          contract: doge,
+          available: await doge.methods
+            .balanceOf(accounts[0], formatToBytes32("DOGE"))
+            .call(),
+        });
+        setWbtc({
+          contract: wbtc,
+          available: await wbtc.methods
+            .balanceOf(accounts[0], formatToBytes32("WBTC"))
+            .call(),
+        });
+      }
       setOwner(owner);
       setTokens(tokenList);
       setBalances(balancesList);
