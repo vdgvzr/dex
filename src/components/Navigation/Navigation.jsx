@@ -65,24 +65,39 @@ function Navigation({ setTheme }) {
     },
   ];
 
-  const chains = [
-    {
-      name: "Mainnet",
-      chainId: "0x1",
-    },
-    {
-      name: "Goerli",
-      chainId: "0x5",
-    },
-    {
-      name: "Sepolia",
-      chainId: "0xaa36a7",
-    },
-    {
-      name: "Localhost",
-      chainId: "0x539",
-    },
-  ];
+  let chains;
+
+  if (import.meta.env.MODE !== "production") {
+    chains = [
+      {
+        name: "Goerli",
+        chainId: "0x5",
+      },
+      {
+        name: "Sepolia",
+        chainId: "0xaa36a7",
+      },
+      {
+        name: "Localhost",
+        chainId: "0x539",
+      },
+    ];
+  } else {
+    chains = [
+      {
+        name: "Mainnet",
+        chainId: "0x1",
+      },
+      {
+        name: "Goerli",
+        chainId: "0x5",
+      },
+      {
+        name: "Sepolia",
+        chainId: "0xaa36a7",
+      },
+    ];
+  }
 
   return (
     <Navbar variant="dark" expand="lg" className="">

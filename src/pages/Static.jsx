@@ -15,16 +15,18 @@ export default function StaticPage({ pageType, title, copy, buttonText }) {
           <h1 className="mb-4" style={{ color: "var(--primary-color)" }}>
             {title}
           </h1>
-          {pageType === "error" && (
-            <>
-              <pre className="my-4" style={preStyle}>
-                {error.message}
-              </pre>
-              <pre className="my-4" style={preStyle}>
-                {error.stack}
-              </pre>
-            </>
-          )}
+          {pageType === "error" &&
+            import.meta.env.MODE !==
+              "production"(
+                <>
+                  <pre className="my-4" style={preStyle}>
+                    {error.message}
+                  </pre>
+                  <pre className="my-4" style={preStyle}>
+                    {error.stack}
+                  </pre>
+                </>
+              )}
           {copy && (
             <pre className="my-4" style={preStyle}>
               {copy}
