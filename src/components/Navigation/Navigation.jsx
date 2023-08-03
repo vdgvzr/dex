@@ -3,7 +3,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { PAGES } from "../../router";
 import { useMetaMask } from "../../hooks/useMetamask";
-import { formatAddress } from "../../utils";
+import { formatAddress, isOwner } from "../../utils";
 import Btn from "../Button/Button";
 import Icon from "../Icon/Icon";
 import { Link } from "react-router-dom";
@@ -21,12 +21,6 @@ function Navigation({ setTheme }) {
     setErrorMessage,
     setSuccessMessage,
   } = useMetaMask();
-
-  function isOwner(wallet, owner) {
-    if (wallet.accounts[0] != undefined && owner != undefined) {
-      return owner.toUpperCase() === wallet.accounts[0].toUpperCase();
-    }
-  }
 
   async function switchNetwork(targetNetworkId, networkName) {
     try {

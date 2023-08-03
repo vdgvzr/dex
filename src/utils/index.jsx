@@ -23,3 +23,9 @@ export const formatToBytes32 = (str) => {
 export const formatFromBytes32 = (str) => {
   return ethers.decodeBytes32String(str);
 };
+
+export const isOwner = (wallet, owner) => {
+  if (wallet.accounts[0] != undefined && owner != undefined) {
+    return owner.toUpperCase() === wallet.accounts[0].toUpperCase();
+  }
+};
