@@ -77,9 +77,12 @@ export const MetaMaskContextProvider = ({ children }) => {
       })
     );
 
-    /* let chainId = await window.ethereum.request({
+    // For retreiving chain id hexes
+    /* let oldChainId = await window.ethereum.request({
       method: "eth_chainId",
-    }); */
+    });
+
+    console.log(oldChainId); */
 
     let userProvider = new ethers.BrowserProvider(window.ethereum);
     let objectNetwork = await userProvider.getNetwork();

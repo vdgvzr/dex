@@ -142,7 +142,7 @@ export default function TradingPanel({
         >
           <div>
             <Icon icon="eth" />
-            {wallet.balance}
+            {balances[0]?.amount}
           </div>
         </Col>
       </Row>

@@ -46,7 +46,7 @@ export default function AddTokenForm() {
           type="text"
           placeholder="Id"
           label="Token ID"
-          text="Enter token ID"
+          text="Enter token ID. Must be in same format as paprika url segment e.g: eth-ethereum"
           controlId="addTokenIDValue"
           innerRef={tokenIdRef}
           transfer={false}
@@ -56,7 +56,7 @@ export default function AddTokenForm() {
           type="text"
           placeholder="Name"
           label="Token name"
-          text="Enter token name"
+          text="Enter token name e.g: Ethereum"
           controlId="addTokenNameValue"
           innerRef={tokenNameRef}
           transfer={false}
@@ -66,7 +66,7 @@ export default function AddTokenForm() {
           type="text"
           placeholder="Symbol"
           label="Token symbol"
-          text="Enter token symbol"
+          text="Enter token symbol e.g: ETH"
           controlId="addTokenSymbolValue"
           innerRef={tokenSymbolRef}
           transfer={false}
@@ -76,7 +76,7 @@ export default function AddTokenForm() {
           type="text"
           placeholder="Address"
           label="Token address"
-          text="Enter token address"
+          text="Enter token address e.g: 0x000000000000000000000000000000"
           controlId="addTokenAddressValue"
           innerRef={tokenAddressRef}
           transfer={false}

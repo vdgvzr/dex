@@ -2,7 +2,12 @@
   @extend %sharetech;
   height: 75px;
   font-size: rem(15);
-  background-color: transparent !important;
+  z-index: 999999999999;
+
+  .container,
+  .container-fluid {
+    background: color(canvas)
+  }
 
   &-brand {
     @extend %handjet;

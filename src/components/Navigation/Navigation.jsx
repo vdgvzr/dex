@@ -7,17 +7,33 @@ import { formatAddress } from "../../utils";
 import Btn from "../Button/Button";
 import Icon from "../Icon/Icon";
 import { Link } from "react-router-dom";
-import Input from "../Input/Input";
 import { NavDropdown } from "react-bootstrap";
 
 function Navigation({ setTheme }) {
-  const { wallet, hasProvider, isConnecting, connectMetaMask, owner } =
-    useMetaMask();
+  const {
+    wallet,
+    hasProvider,
+    isConnecting,
+    connectMetaMask,
+    owner,
+    loadWeb3,
+    updateWalletAndAccounts,
+  } = useMetaMask();
 
   function isOwner(wallet, owner) {
     if (wallet.accounts[0] != undefined && owner != undefined) {
       return owner.toUpperCase() === wallet.accounts[0].toUpperCase();
     }
+  }
+
+  async function switchNetwork(targetNetworkId) {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: targetNetworkId }],
+    });
+
+    loadWeb3();
+    updateWalletAndAccounts();
   }
 
   const themes = [
@@ -43,9 +59,28 @@ function Navigation({ setTheme }) {
     },
   ];
 
+  const chains = [
+    {
+      name: "Mainnet",
+      chainId: "0x1",
+    },
+    {
+      name: "Goerli",
+      chainId: "0x5",
+    },
+    {
+      name: "Sepolia",
+      chainId: "0xaa36a7",
+    },
+    {
+      name: "Unknown",
+      chainId: "0x539",
+    },
+  ];
+
   return (
     <Navbar variant="dark" expand="lg" className="">
-      <Container>
+      <Container fluid className="pb-3">
         <Link className="navbar-brand" to="/">
           {import.meta.env.VITE_SITE_NAME}
         </Link>
@@ -61,7 +96,7 @@ function Navigation({ setTheme }) {
                 );
               }
             })}
-            <NavDropdown title="Theme" id="basic-nav-dropdown" className="me-4">
+            <NavDropdown title="Theme" id="basic-nav-dropdown">
               {themes.map((theme, i) => {
                 return (
                   <NavDropdown.Item
@@ -91,6 +126,7 @@ function Navigation({ setTheme }) {
             )}
             {window.ethereum?.isMetaMask && wallet.accounts.length < 1 && (
               <Btn
+                classes="ms-4"
                 disabled={isConnecting}
                 text="Connect Wallet"
                 action={connectMetaMask}
@@ -98,6 +134,19 @@ function Navigation({ setTheme }) {
             )}
             {hasProvider && wallet.accounts.length > 0 && (
               <>
+                <NavDropdown title="Switch Network" id="basic-nav-dropdown">
+                  {chains.map((chain, i) => {
+                    return (
+                      <NavDropdown.Item
+                        className="border-brand-primary"
+                        onClick={() => switchNetwork(chain.chainId)}
+                        key={i}
+                      >
+                        {chain.name}
+                      </NavDropdown.Item>
+                    );
+                  })}
+                </NavDropdown>
                 <Link
                   className="nav-link navbar__wallet-info disabled"
                   disabled={true}

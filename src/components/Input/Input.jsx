@@ -1,7 +1,8 @@
-import { Form } from "react-bootstrap";
+import { Form, FormText } from "react-bootstrap";
 
 export default function Input({
   type,
+  text,
   placeholder,
   step = null,
   label,
@@ -19,18 +20,22 @@ export default function Input({
         {type === "select" ? (
           <Form.Select defaultValue={defaultValue}>{options}</Form.Select>
         ) : (
-          <Form.Control
-            type={type && type}
-            placeholder={placeholder}
-            step={
-              type && type === "number" ? (step != null ? step : null) : null
-            }
-            onChange={
-              setInput !== null ? (e) => setInput(e.target.value) : null
-            }
-            ref={innerRef}
-            disabled={disabled}
-          />
+          <>
+            <Form.Control
+              type={type && type}
+              placeholder={placeholder}
+              step={
+                type && type === "number" ? (step != null ? step : null) : null
+              }
+              onChange={
+                setInput !== null ? (e) => setInput(e.target.value) : null
+              }
+              ref={innerRef}
+              disabled={disabled}
+              aria-describedby={label}
+            />
+            <Form.Text id={label}>{text}</Form.Text>
+          </>
         )}
       </Form.Group>
     </>

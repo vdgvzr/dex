@@ -3,8 +3,8 @@ import App from "./App";
 import Dex from "./pages/Dex";
 import Wallet from "./pages/Wallet";
 import Admin from "./pages/Admin";
-import Home from "./pages/Home";
-import Error from "./pages/Error";
+import Static from "./pages/Static";
+import { mainSiteCopy } from "../src/assets/copy";
 
 export const router = createBrowserRouter([
   {
@@ -12,9 +12,21 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        errorElement: <Error />,
+        errorElement: (
+          <Static pageType="error" title="Error - Something went wrong" />
+        ),
         children: [
-          { index: true, element: <Home /> },
+          {
+            index: true,
+            element: (
+              <Static
+                pageType="home"
+                title={`Welcome to ${import.meta.env.VITE_SITE_NAME}`}
+                copy={mainSiteCopy}
+                buttonText={"Start Trading Now"}
+              />
+            ),
+          },
           {
             path: "admin",
             element: <Admin />,
@@ -27,7 +39,17 @@ export const router = createBrowserRouter([
             path: "wallet",
             element: <Wallet />,
           },
-          { path: "*", element: <h1>Page not found</h1> },
+          {
+            path: "*",
+            element: (
+              <Static
+                pageType="404"
+                title="404 - page not found"
+                copy="You have entered an incorrect destination, please try again"
+                buttonText="Home"
+              />
+            ),
+          },
         ],
       },
     ],

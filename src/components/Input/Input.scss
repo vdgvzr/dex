@@ -17,6 +17,11 @@
   }
 }
 
+.form-text {
+  @extend %sharetech;
+  color: color(grey, air);
+}
+
 // Form input
 
 .form-input {
