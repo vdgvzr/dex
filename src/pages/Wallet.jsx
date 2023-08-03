@@ -157,36 +157,34 @@ export default function Wallet() {
       .approve(dex?._address, amount)
       .send({ from })
       .once("receipt", () => {
-        _deposit();
+        _deposit(from, amount, ticker);
       })
       .catch((e) => {
         setErrorMessage(e.message);
         setShowModal(false);
       });
+  }
 
-    function _deposit() {
-      dex?.methods
-        .deposit(amount, formatToBytes32(ticker))
-        .send({
-          from,
-        })
-        .once("receipt", () => {
-          setSuccessMessage(
-            `Deposited ${window.web3.utils.fromWei(
-              amount,
-              "ether"
-            )} ${formatFromBytes32(ticker)}!`
-          );
-          loadWeb3();
-          updateWalletAndAccounts();
-          setInput("");
-          setShowModal(false);
-        })
-        .catch((e) => {
-          setErrorMessage(e.message);
-          setShowModal(false);
-        });
-    }
+  function _deposit(from, amount, ticker) {
+    dex?.methods
+      .deposit(amount, formatToBytes32(ticker))
+      .send({
+        from,
+      })
+      .once("receipt", () => {
+        setSuccessMessage(
+          `Deposited ${window.web3.utils.fromWei(amount, "ether")} ${ticker}!`
+        );
+        loadWeb3();
+        updateWalletAndAccounts();
+        setInput("");
+        setShowModal(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        setErrorMessage(e.message);
+        setShowModal(false);
+      });
   }
 
   function withdraw(from, amount, ticker) {

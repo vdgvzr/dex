@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import Btn from "../components/Button/Button";
 import { useMetaMask } from "../hooks/useMetamask";
 
-export default function StaticPage({ pageType, title, copy, buttonText }) {
+export default function Static({ pageType, title, copy, buttonText }) {
   const { isConnecting, connectMetaMask, wallet } = useMetaMask();
   const error = useRouteError();
   const preStyle = { whiteSpace: "pre-wrap" };
