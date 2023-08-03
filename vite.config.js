@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react-swc";
 export default defineConfig({
   resolve: {
     alias: {
-      timers: "rollup-plugin-node-polyfills/polyfills/timers",
+      events: "rollup-plugin-node-polyfills/polyfills/events",
     },
   },
   plugins: [react()],
