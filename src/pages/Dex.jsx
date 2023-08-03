@@ -6,6 +6,7 @@ import { formatToBytes32 } from "../utils";
 import PairPanel from "../components/PairPanel/PairPanel";
 import OrdersPanel from "../components/OrdersPanel/OrdersPanel";
 import UserOrderPanel from "../components/UserOrderPanel/UserOrderPanel";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const ORDERTYPE = {
   LIMIT: "LIMIT",
@@ -15,7 +16,10 @@ const ORDERTYPE = {
 export default function Dex() {
   const { dex } = useMetaMask();
   const [orderType, setOrderType] = useState(ORDERTYPE.LIMIT);
-  const [selectedToken, setSelectedToken] = useState("LINK");
+  const [selectedToken, setSelectedToken] = useLocalStorage(
+    "SELECTED_TOKEN",
+    "LINK"
+  );
   const [orderAction, setOrderAction] = useState(0);
   const [orderBook, setOrderBook] = useState([]);
 

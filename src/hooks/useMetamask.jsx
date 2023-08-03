@@ -235,6 +235,7 @@ export const MetaMaskContextProvider = ({ children }) => {
     setIsConnecting(false);
   };
 
+  // Get test token addresses
   // console.log(link.contract._address);
   // console.log(doge.contract._address);
   // console.log(wbtc.contract._address);

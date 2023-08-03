@@ -24,6 +24,8 @@ contract Dex is Wallet {
         uint256 filled;
     }
 
+    address payable constant FEE_ADDRESS = payable(0x7eaAFED0E594a1ac12f50d59847eBB784c66c45E);
+
     uint public nextOrderId = 0;
 
     mapping (bytes32 => mapping (uint => Order[])) public orderBook;
@@ -111,12 +113,16 @@ contract Dex is Wallet {
 
                 balances[orders[i].trader][_symbol] = balances[orders[i].trader][_symbol].sub(filled);
                 balances[orders[i].trader][ETH] = balances[orders[i].trader][ETH].add(cost);
+
+                _transfer(FEE_ADDRESS, _amount.div(100));
             } else if (_orderType == OrderType.SELL) {
                 balances[_msgSender()][_symbol] = balances[_msgSender()][_symbol].sub(filled);
                 balances[_msgSender()][ETH] = balances[_msgSender()][ETH].add(cost);
 
                 balances[orders[i].trader][_symbol] = balances[orders[i].trader][_symbol].add(filled);
                 balances[orders[i].trader][ETH] = balances[orders[i].trader][ETH].sub(cost);
+
+                _transfer(FEE_ADDRESS, _amount.div(100));
             }
         }
 
@@ -126,5 +132,10 @@ contract Dex is Wallet {
             }
             orders.pop();
         }
+    }
+
+    function _transfer(address payable recipient, uint amount) private returns(bool) {
+        (bool success,) = recipient.call{value: amount}("");
+        return success;
     }
 }

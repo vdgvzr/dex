@@ -4,11 +4,11 @@ import Navigation from "./components/Navigation/Navigation";
 import { Container } from "react-bootstrap";
 import Footer from "./components/Footer/Footer";
 import Logo from "./components/Logo";
-import { useState } from "react";
 import MessageBanner from "./components/MessageBanner/MessageBanner";
+import { useLocalStorage } from "./hooks/useLocalStorage";
 
 function App() {
-  const [theme, setTheme] = useState({
+  const [theme, setTheme] = useLocalStorage("THEME", {
     primary: "hsl(332, 87%, 70%)",
     secondary: "hsl(179, 86%, 47%)",
   });

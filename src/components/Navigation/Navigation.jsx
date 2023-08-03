@@ -18,6 +18,8 @@ function Navigation({ setTheme }) {
     owner,
     loadWeb3,
     updateWalletAndAccounts,
+    setErrorMessage,
+    setSuccessMessage,
   } = useMetaMask();
 
   function isOwner(wallet, owner) {
@@ -26,14 +28,18 @@ function Navigation({ setTheme }) {
     }
   }
 
-  async function switchNetwork(targetNetworkId) {
-    await window.ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: targetNetworkId }],
-    });
-
-    loadWeb3();
-    updateWalletAndAccounts();
+  async function switchNetwork(targetNetworkId, networkName) {
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: targetNetworkId }],
+      });
+      setSuccessMessage(`Successfully switched chain to ${networkName}!`);
+      loadWeb3();
+      updateWalletAndAccounts();
+    } catch (e) {
+      setErrorMessage(e.message);
+    }
   }
 
   const themes = [
@@ -73,7 +79,7 @@ function Navigation({ setTheme }) {
       chainId: "0xaa36a7",
     },
     {
-      name: "Unknown",
+      name: "Localhost",
       chainId: "0x539",
     },
   ];
@@ -139,7 +145,7 @@ function Navigation({ setTheme }) {
                     return (
                       <NavDropdown.Item
                         className="border-brand-primary"
-                        onClick={() => switchNetwork(chain.chainId)}
+                        onClick={() => switchNetwork(chain.chainId, chain.name)}
                         key={i}
                       >
                         {chain.name}

@@ -1,9 +1,6 @@
 import Tbl from "../Table/Table";
 import { formatFromBytes32 } from "../../utils";
 import { useMetaMask } from "../../hooks/useMetamask";
-import axios from "axios";
-import { useState } from "react";
-import { getApi } from "../../api/api";
 import { Col } from "react-bootstrap";
 import TickerPrice from "../TickerPrice/TickerPrice";
 
