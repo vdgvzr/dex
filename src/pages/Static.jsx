@@ -4,7 +4,7 @@ import Btn from "../components/Button/Button";
 import { useMetaMask } from "../hooks/useMetamask";
 
 export default function StaticPage({ pageType, title, copy, buttonText }) {
-  const { isConnecting, connectMetaMask, wallet } = useMetaMask();
+  const { isConnecting, connectMetaMask, wallet, hasProvider } = useMetaMask();
   const error = useRouteError();
   const preStyle = { whiteSpace: "pre-wrap" };
 
@@ -35,15 +35,20 @@ export default function StaticPage({ pageType, title, copy, buttonText }) {
               pageType === "home"
                 ? window.ethereum?.isMetaMask && wallet.accounts.length < 1
                   ? "/"
-                  : "/trade"
+                  : hasProvider
+                  ? "/trade"
+                  : "https://metamask.io"
                 : "/"
             }
           >
             <Btn
               disabled={isConnecting}
               text={
-                window.ethereum?.isMetaMask && wallet.accounts.length < 1
-                  ? "Connect Wallet"
+                !hasProvider ||
+                (window.ethereum?.isMetaMask && wallet.accounts.length < 1)
+                  ? hasProvider
+                    ? "Connect Wallet"
+                    : "Install metamask"
                   : buttonText
               }
               action={

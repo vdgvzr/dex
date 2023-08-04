@@ -68,7 +68,7 @@ export default function Admin() {
           </Col>
         </Row>
       ) : (
-        <Static pageType="error" title="Access denied" />
+        <Static pageType="error" title="Access denied" buttonText="Home" />
       )}
     </>
   );

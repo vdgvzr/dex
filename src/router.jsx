@@ -13,7 +13,7 @@ export const router = createBrowserRouter([
     children: [
       {
         errorElement: (
-          <Static pageType="error" title="Error - Something went wrong" />
+          <Static pageType="error" title="Error - Something went wrong" buttonText="Home" />
         ),
         children: [
           {
