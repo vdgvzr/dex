@@ -17,9 +17,19 @@ export default function Input({
     <>
       <Form.Group className="mb-3" controlId={controlId}>
         <Form.Label>{type && label}</Form.Label>
-        {type === "select" ? (
-          <Form.Select defaultValue={defaultValue}>{options}</Form.Select>
-        ) : (
+        {type === "select" && (
+          <>
+            <Form.Select defaultValue={defaultValue}>{options}</Form.Select>
+            <Form.Text id={label}>{text}</Form.Text>
+          </>
+        )}
+        {type === "textarea" && (
+          <>
+            <Form.Control as={type} aria-label={label} ref={innerRef} />
+            <Form.Text id={label}>{text}</Form.Text>
+          </>
+        )}
+        {type !== "select" && type !== "textarea" && (
           <>
             <Form.Control
               type={type && type}

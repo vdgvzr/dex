@@ -8,9 +8,6 @@ import { Col, Row } from "react-bootstrap";
 export default function Wallet() {
   const {
     dex,
-    link,
-    doge,
-    wbtc,
     wallet,
     loadWeb3,
     balances,
@@ -32,31 +29,13 @@ export default function Wallet() {
   const rows = [];
 
   balances.map((balance) => {
-    let contract;
-    let available;
-
-    if (balance.coin === "LINK") {
-      contract = link.contract;
-      available = link.available;
-    }
-
-    if (balance.coin === "DOGE") {
-      contract = doge.contract;
-      available = doge.available;
-    }
-
-    if (balance.coin === "WBTC") {
-      contract = wbtc.contract;
-      available = wbtc.available;
-    }
-
     rows.push({
       coin: balance.coin,
       amount: balance.amount,
       available:
         balance.coin === "ETH"
           ? wallet.balance
-          : window.web3.utils.fromWei(available, "ether"),
+          : window.web3.utils.fromWei(balance.available, "ether"),
       action: (
         <>
           <WalletModal
@@ -67,7 +46,7 @@ export default function Wallet() {
             value={
               balance.coin === "ETH"
                 ? wallet.balance
-                : window.web3.utils.fromWei(available, "ether")
+                : window.web3.utils.fromWei(balance.available, "ether")
             }
             action={() =>
               balance.coin === "ETH"
@@ -79,7 +58,7 @@ export default function Wallet() {
                     wallet.accounts[0],
                     window.web3.utils.toWei(input, "ether"),
                     balance.coin,
-                    contract
+                    balance.contract
                   )
             }
           />

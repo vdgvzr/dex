@@ -4,7 +4,6 @@ import { formatFromBytes32, isOwner } from "../utils";
 import Static from "./Static";
 import { useMetaMask } from "../hooks/useMetamask";
 import Tbl from "../components/Table/Table";
-import Btn from "../components/Button/Button";
 
 export default function Admin() {
   const {
@@ -24,8 +23,6 @@ export default function Admin() {
   };
 
   const rows = [];
-
-  // if (formatFromBytes32(token.ticker) !== "ETH") {
 
   tokens?.map((token, i) => {
     rows.push({

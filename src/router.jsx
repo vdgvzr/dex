@@ -4,7 +4,7 @@ import Dex from "./pages/Dex";
 import Wallet from "./pages/Wallet";
 import Admin from "./pages/Admin";
 import Static from "./pages/Static";
-import { mainSiteCopy } from "../src/assets/copy";
+import { mainSiteCopy } from "../src/assets/js/copy";
 
 export const router = createBrowserRouter([
   {
