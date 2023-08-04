@@ -21,7 +21,6 @@ module.exports = {
       gasPrice: 10000000000,
     },
     sepolia: {
-      // tx: 0x6f346cc9c3c31f4213ab65a6f4c64ca2a9ccea42822010c255db5a94ed8103a4 contract: 0x92C946B06181a3826cab64354e98200ed3044F4c
       provider: () => {
         return new HDWalletProvider(
           mnemonic,
