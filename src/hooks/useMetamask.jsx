@@ -102,8 +102,6 @@ export const MetaMaskContextProvider = ({ children }) => {
             );
           }
 
-          console.log(tokenContract);
-
           if (formatFromBytes32(tokenList[i].ticker) !== "ETH") {
             const balance = await dex?.methods
               .balances(accounts[0], tokenList[i].ticker)
