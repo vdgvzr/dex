@@ -8,13 +8,16 @@ import {
 import detectEthereumProvider from "@metamask/detect-provider";
 import {
   formatBalance,
+  formatChainAsNum,
   formatFromBytes32,
-  formatToBytes32,
 } from "../utils/index";
 import { ethers } from "ethers";
 
 import Dex from "../../abis/Dex.json";
-import { human_standard_token_abi } from "../assets/js/humanReadableAbi";
+import {
+  human_standard_token_abi,
+  sepolia_abi,
+} from "../assets/js/humanReadableAbi";
 import Web3 from "web3";
 
 const disconnectedState = {
@@ -60,6 +63,9 @@ export const MetaMaskContextProvider = ({ children }) => {
     const accounts = await window.web3.eth.getAccounts();
     const networkId = await window.web3.eth.net.getId();
     const dexNetworkData = Dex.networks[networkId];
+    let chainId = await window.ethereum.request({
+      method: "eth_chainId",
+    });
 
     if (dexNetworkData) {
       // Get the contracts
@@ -82,10 +88,21 @@ export const MetaMaskContextProvider = ({ children }) => {
       const balancesList = [];
       if (accounts[0] != undefined) {
         for (let i = 0; i < tokenList.length; i++) {
-          const tokenContract = new window.web3.eth.Contract(
-            human_standard_token_abi,
-            tokenList[i].tokenAddress
-          );
+          let tokenContract;
+
+          if (formatChainAsNum(chainId) === 1337) {
+            tokenContract = new window.web3.eth.Contract(
+              human_standard_token_abi,
+              tokenList[i].tokenAddress
+            );
+          } else {
+            tokenContract = new window.web3.eth.Contract(
+              sepolia_abi,
+              tokenList[i].tokenAddress
+            );
+          }
+
+          console.log(tokenContract);
 
           if (formatFromBytes32(tokenList[i].ticker) !== "ETH") {
             const balance = await dex?.methods
