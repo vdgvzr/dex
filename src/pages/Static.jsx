@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import Btn from "../components/Button/Button";
 import { useMetaMask } from "../hooks/useMetamask";
 
-export default function Static({ pageType, title, copy, buttonText }) {
+export default function StaticPage({ pageType, title, copy, buttonText }) {
   const { isConnecting, connectMetaMask, wallet } = useMetaMask();
   const error = useRouteError();
   const preStyle = { whiteSpace: "pre-wrap" };
@@ -15,18 +15,16 @@ export default function Static({ pageType, title, copy, buttonText }) {
           <h1 className="mb-4" style={{ color: "var(--primary-color)" }}>
             {title}
           </h1>
-          {pageType === "error" &&
-            import.meta.env.MODE !==
-              "production"(
-                <>
-                  <pre className="my-4" style={preStyle}>
-                    {error.message}
-                  </pre>
-                  <pre className="my-4" style={preStyle}>
-                    {error.stack}
-                  </pre>
-                </>
-              )}
+          {pageType === "error" && import.meta.env.MODE !== "production" && (
+            <>
+              <pre className="my-4" style={preStyle}>
+                {error?.message}
+              </pre>
+              <pre className="my-4" style={preStyle}>
+                {error?.stack}
+              </pre>
+            </>
+          )}
           {copy && (
             <pre className="my-4" style={preStyle}>
               {copy}

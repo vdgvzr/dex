@@ -58,6 +58,13 @@ contract Wallet is Context, Ownable  {
         tokenListCount++;
     }
 
+    function deleteToken(bytes32 _ticker, uint256 _index) public onlyOwner() {
+        delete tokens[_ticker];
+        tokenList[_index] = tokenList[tokenList.length - 1];
+        tokenList.pop();
+        tokenListCount--;
+    }
+
     /**
     * @dev Deposit ETH into your account
     */
