@@ -14,11 +14,11 @@ const ORDERTYPE = {
 };
 
 export default function Dex() {
-  const { dex } = useMetaMask();
+  const { dex, balances } = useMetaMask();
   const [orderType, setOrderType] = useState(ORDERTYPE.LIMIT);
   const [selectedToken, setSelectedToken] = useLocalStorage(
     "SELECTED_TOKEN",
-    "LINK"
+    balances[1]?.coin
   );
   const [orderAction, setOrderAction] = useState(0);
   const [orderBook, setOrderBook] = useState([]);
