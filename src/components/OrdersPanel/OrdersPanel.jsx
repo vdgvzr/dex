@@ -3,7 +3,7 @@ import { formatBalance } from "../../utils";
 import Tbl from "../Table/Table";
 import Icon from "../Icon/Icon";
 
-export default function PairPanel({ orderBook, selectedToken }) {
+export default function PairPanel({ orderBook, selectedToken, orderAction }) {
   const headings = {
     0: "Price",
     1: `Total (${selectedToken})`,
@@ -13,6 +13,11 @@ export default function PairPanel({ orderBook, selectedToken }) {
   const rows = [];
 
   let duplicates = [];
+
+  duplicates.push({
+    price: parseInt(orderBook[orderBook.length - 1]?.price),
+    amount: parseInt(orderBook[orderBook.length - 1]?.amount),
+  });
 
   for (let i = 0; i < orderBook.length - 1; i++) {
     let total = 0;
@@ -58,7 +63,7 @@ export default function PairPanel({ orderBook, selectedToken }) {
   return (
     <>
       <Col className="text-center orders-panel">
-        <h3>Orderbook</h3>
+        <h3>{orderAction === 0 ? "Buy" : "Sell"} Orderbook</h3>
       </Col>
       <Col>
         <Tbl showHeadings headings={headings} rows={rows} />

@@ -14,7 +14,7 @@ const ORDERTYPE = {
 };
 
 export default function Dex() {
-  const { dex, balances, wallet } = useMetaMask();
+  const { dex, balances } = useMetaMask();
   const [orderType, setOrderType] = useState(ORDERTYPE.LIMIT);
   const [selectedToken, setSelectedToken] = useLocalStorage(
     "SELECTED_TOKEN",
@@ -22,12 +22,11 @@ export default function Dex() {
   );
   const [orderAction, setOrderAction] = useState(0);
   const [orderBook, setOrderBook] = useState([]);
-  const [thebalances, setBalances] = useState(null);
 
   useEffect(() => {
     async function getOrderBook(token) {
       return await dex?.methods
-        .getOrderBook(token, orderAction)
+        .getOrderBook(token, orderAction === 0 ? 1 : 0)
         .call()
         .then((res) => {
           setOrderBook(res);
@@ -36,19 +35,6 @@ export default function Dex() {
 
     getOrderBook(formatToBytes32(selectedToken), orderAction);
   }, [dex, orderAction, selectedToken]);
-
-  useEffect(() => {
-    async function balances(address, token) {
-      return await dex?.methods
-        .balances(address, token)
-        .call()
-        .then((res) => {
-          setBalances(res);
-        });
-    }
-
-    balances(wallet.accounts[0], formatToBytes32("ETH"));
-  }, [dex, wallet]);
 
   return (
     <>
@@ -77,7 +63,11 @@ export default function Dex() {
           xs={12}
           className="bg-opaque p-3 order-panel format-container"
         >
-          <OrdersPanel orderBook={orderBook} selectedToken={selectedToken} />
+          <OrdersPanel
+            orderBook={orderBook}
+            selectedToken={selectedToken}
+            orderAction={orderAction === 0 ? 1 : 0}
+          />
         </Col>
       </Row>
       <Row className="my-5 justify-content-center">
