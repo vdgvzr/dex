@@ -1,8 +1,41 @@
-# React + Vite
+# DEX
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is for demonstative purposes only. Project is hosted [https://dex-snowy.vercel.app/](Here),
+and is currently deployed only to Sepolia testnet.
 
-Currently, two official plugins are available:
+## Details
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Backend framework used** Solidity
+* **Frontend framework used** Vite - React + SWC
+
+## Host
+
+[https://dex-snowy.vercel.app/](Vercel)
+
+## Chains deployed
+| | Development | Staging | Live
+| -- | -- | -- | --
+| **Mainnet** | N/A | N/A | N/A
+| **Sepolia** | N/A | N/A | Deployed
+| **Goerli** | N/A | N/A | N/A
+
+
+## File structure
+
+```
+|-- ./
+|-- abis
+|-- contracts
+|-- dist
+|-- src
+    |-- main.jsx
+|-- test
+```
+## Development process
+
+1. Clone the repository at [https://github.com/vdgvzr/dex.git](https://github.com/vdgvzr/dex.git).
+2. Create a new `.env` file following the example.
+3. Create a new `secret.json` file following the example.
+4. Run `npm i` to install frontend libraries.
+5. Run `npm run build` to build transpiled frontend assets.
+6. Run `npm run dev` to start development server.
