@@ -37,19 +37,21 @@ export default function PairPanel({ orderBook, selectedToken }) {
   }, 0);
   {
     orders.map((order) => {
-      rows.push({
-        price: (
-          <>
-            <Icon icon="eth" />
-            {window.web3.utils.fromWei(order.price, "ether")}
-          </>
-        ),
-        amount:
-          formatBalance(window.web3.utils.toWei(order.amount, "ether")) +
-          " " +
-          selectedToken,
-        percentage: ((order.amount / percentage) * 100).toFixed(2),
-      });
+      if (order.price > 0 && order.amount > 0) {
+        rows.push({
+          price: (
+            <>
+              <Icon icon="eth" />
+              {window.web3.utils.fromWei(order.price, "ether")}
+            </>
+          ),
+          amount:
+            formatBalance(window.web3.utils.toWei(order.amount, "ether")) +
+            " " +
+            selectedToken,
+          percentage: ((order.amount / percentage) * 100).toFixed(2),
+        });
+      }
     });
   }
 
