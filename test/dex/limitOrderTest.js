@@ -43,13 +43,28 @@ contract.skip("Dex", (accounts) => {
 
     let orderbook = await dex.getOrderBook(web3.utils.fromUtf8("LINK"), 0);
     assert(orderbook.length > 0);
-    console.log(orderbook);
     for (let i = 0; i < orderbook.length - 1; i++) {
       assert(
         orderbook[i].price >= orderbook[i + 1].price,
         "not right order in buy book"
       );
     }
+  });
+  //Delete orddr
+  it("deletes orders correctly", async () => {
+    let dex = await Dex.deployed();
+    let link = await Link.deployed();
+    await link.approve(dex.address, 500);
+    await dex.depositEth({ value: 3000 });
+    await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 15, 300.7);
+    await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 15, 100.7);
+    await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 15, 200.7);
+
+    let orderbook = await dex.getOrderBook(web3.utils.fromUtf8("LINK"), 0);
+
+    dex.deleteOrder(1, web3.utils.fromUtf8("LINK"), 0);
+    assert(orderbook.length > 0);
+    assert(orderbook[1].price === 0);
   });
   //The SELL order book should be ordered on price from lowest to highest starting at index 0
   it("The SELL order book should be ordered on price from lowest to highest starting at index 0", async () => {

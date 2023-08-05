@@ -8,7 +8,8 @@ export default function UserOrderPanel({
   orderAction,
   selectedToken,
 }) {
-  const { dex, wallet, loadWeb3 } = useMetaMask();
+  const { dex, wallet, loadWeb3, setSuccessMessage, setErrorMessage } =
+    useMetaMask();
 
   const headings = {
     0: "Price",
@@ -34,13 +35,13 @@ export default function UserOrderPanel({
               selectedToken,
             action: (
               <a
-                onClick={() =>
+                onClick={() => {
                   deleteOrder(
-                    order.id,
+                    parseInt(order.id),
                     formatToBytes32(selectedToken),
                     orderAction
-                  )
-                }
+                  );
+                }}
               >
                 Delete order
               </a>
@@ -57,12 +58,12 @@ export default function UserOrderPanel({
       .send({
         from: wallet.accounts[0],
       })
-      .once("receipt", (receipt) => {
-        console.log(receipt);
+      .once("receipt", () => {
+        setSuccessMessage("Successfully deleted message");
         loadWeb3();
       })
       .catch((e) => {
-        console.error(e);
+        setErrorMessage(e.message);
       });
   }
 
