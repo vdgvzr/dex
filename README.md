@@ -1,24 +1,24 @@
 # DEX
 
-This project is for demonstative purposes only. Project is hosted [https://dex-snowy.vercel.app/](Here),
+This project is for demonstative purposes only. Project is hosted [Here](https://dex-snowy.vercel.app/),
 and is currently deployed only to Sepolia testnet.
 
 ## Details
 
-* **Backend framework used** Solidity
-* **Frontend framework used** Vite - React + SWC
+- **Backend framework used** Solidity
+- **Frontend framework used** Vite - React + SWC
 
 ## Host
 
-[https://dex-snowy.vercel.app/](Vercel)
+[Vercel](https://dex-snowy.vercel.app/)
 
 ## Chains deployed
-| | Development | Staging | Live
-| -- | -- | -- | --
-| **Mainnet** | N/A | N/A | N/A
-| **Sepolia** | N/A | N/A | Deployed
-| **Goerli** | N/A | N/A | N/A
 
+|             | Development | Staging | Live     |
+| ----------- | ----------- | ------- | -------- |
+| **Mainnet** | N/A         | N/A     | N/A      |
+| **Sepolia** | N/A         | N/A     | Deployed |
+| **Goerli**  | N/A         | N/A     | N/A      |
 
 ## File structure
 
@@ -31,6 +31,7 @@ and is currently deployed only to Sepolia testnet.
     |-- main.jsx
 |-- test
 ```
+
 ## Development process
 
 1. Clone the repository at [https://github.com/vdgvzr/dex.git](https://github.com/vdgvzr/dex.git).
