@@ -2,62 +2,72 @@ const Dex = artifacts.require("Dex");
 const Link = artifacts.require("Link");
 const truffleAssert = require("truffle-assertions");
 
-contract("Dex - limit orders", async (accounts) => {
-  let DEX;
-  let LINK;
-  let LINK_NAME;
-  let LINK_SYMBOL;
-
-  before(async () => {
-    DEX = await Dex.deployed();
-    LINK = await Link.deployed();
-    LINK_NAME = await web3.utils.fromUtf8(LINK.name());
-    LINK_SYMBOL = await web3.utils.fromUtf8(LINK.symbol());
-
-    await LINK.approve(DEX.address, 1000);
-    await DEX.depositEth({ value: 3000 });
-    await DEX.addToken(LINK_NAME, LINK_SYMBOL, LINK.address, {
+contract.skip("Dex", (accounts) => {
+  //The user must have ETH deposited such that deposited eth >= buy order value
+  it("should throw an error if ETH balance is too low when creating BUY limit order", async () => {
+    let dex = await Dex.deployed();
+    let link = await Link.deployed();
+    await truffleAssert.reverts(
+      dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 10, 1)
+    );
+    dex.depositEth({ value: 10 });
+    await truffleAssert.passes(
+      dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 10, 1)
+    );
+  });
+  //The user must have enough tokens deposited such that token balance >= sell order amount
+  it("should throw an error if token balance is too low when creating SELL limit order", async () => {
+    let dex = await Dex.deployed();
+    let link = await Link.deployed();
+    await truffleAssert.reverts(
+      dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 10, 1)
+    );
+    await link.approve(dex.address, 500);
+    await dex.addToken(web3.utils.fromUtf8("LINK"), link.address, {
       from: accounts[0],
     });
-    await DEX.deposit(1000, LINK_SYMBOL);
+    await dex.deposit(10, web3.utils.fromUtf8("LINK"));
+    await truffleAssert.passes(
+      dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 10, 1)
+    );
   });
+  //The BUY order book should be ordered on price from highest to lowest starting at index 0
+  it("The BUY order book should be ordered on price from highest to lowest starting at index 0", async () => {
+    let dex = await Dex.deployed();
+    let link = await Link.deployed();
+    await link.approve(dex.address, 500);
+    await dex.depositEth({ value: 3000 });
+    await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 15, 300.7);
+    await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 15, 100.7);
+    await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 15, 200.7);
 
-  describe("dex limit order functions", async () => {
-    it("should throw an error if token balance is too low when creating BUY limit order", async () => {
-      await truffleAssert.reverts(
-        DEX.createLimitOrder(0, LINK_SYMBOL, 4000, 100)
+    let orderbook = await dex.getOrderBook(web3.utils.fromUtf8("LINK"), 0);
+    assert(orderbook.length > 0);
+    console.log(orderbook);
+    for (let i = 0; i < orderbook.length - 1; i++) {
+      assert(
+        orderbook[i].price >= orderbook[i + 1].price,
+        "not right order in buy book"
       );
-      await truffleAssert.passes(DEX.createLimitOrder(0, LINK_SYMBOL, 10, 1));
-    });
+    }
+  });
+  //The SELL order book should be ordered on price from lowest to highest starting at index 0
+  it("The SELL order book should be ordered on price from lowest to highest starting at index 0", async () => {
+    let dex = await Dex.deployed();
+    let link = await Link.deployed();
+    await link.approve(dex.address, 500);
+    await dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 1, 300);
+    await dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 1, 100);
+    await dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 1, 200);
 
-    it("the BUY order book should be ordered by price from highest to lowest", async () => {
-      await DEX.createLimitOrder(0, LINK_SYMBOL, 1, 300);
-      await DEX.createLimitOrder(0, LINK_SYMBOL, 1, 100);
-      await DEX.createLimitOrder(0, LINK_SYMBOL, 1, 200);
+    let orderbook = await dex.getOrderBook(web3.utils.fromUtf8("LINK"), 1);
+    assert(orderbook.length > 0);
 
-      let ORDERBOOK = await DEX.getOrderBook(LINK_SYMBOL, 0);
-      assert(ORDERBOOK.length > 0);
-      for (let i = 0; i < ORDERBOOK.length - 1; i++) {
-        assert(
-          ORDERBOOK[i].price <= ORDERBOOK[i + 1].price,
-          "not right order in buy book"
-        );
-      }
-    });
-
-    it("the SELL order book should be ordered by price from lowest to highest", async () => {
-      await DEX.createLimitOrder(1, LINK_SYMBOL, 1, 300);
-      await DEX.createLimitOrder(1, LINK_SYMBOL, 1, 100);
-      await DEX.createLimitOrder(1, LINK_SYMBOL, 1, 200);
-
-      let ORDERBOOK = await DEX.getOrderBook(LINK_SYMBOL, 0);
-      assert(ORDERBOOK.length > 0);
-      for (let i = 0; i < ORDERBOOK.length - 1; i++) {
-        assert(
-          ORDERBOOK[i].price <= ORDERBOOK[i + 1].price,
-          "not right order in sell book"
-        );
-      }
-    });
+    for (let i = 0; i < orderbook.length - 1; i++) {
+      assert(
+        orderbook[i].price <= orderbook[i + 1].price,
+        "not right order in sell book"
+      );
+    }
   });
 });

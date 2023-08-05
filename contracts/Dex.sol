@@ -24,7 +24,7 @@ contract Dex is Wallet {
         uint256 filled;
     }
 
-    address payable constant FEE_ADDRESS = payable(0x7eaAFED0E594a1ac12f50d59847eBB784c66c45E);
+    // address payable constant FEE_ADDRESS = payable(0x7eaAFED0E594a1ac12f50d59847eBB784c66c45E);
 
     uint public nextOrderId = 0;
 
@@ -41,7 +41,7 @@ contract Dex is Wallet {
 
     function createLimitOrder(OrderType _orderType,  bytes32 _symbol, uint256 _amount, uint256 _price) public {
         if (_orderType == OrderType.BUY) {
-            require(balances[_msgSender()]["ETH"] >= _amount.mul(_price.div(100)));
+            require(balances[_msgSender()]["ETH"] >= _amount.mul(_price));
         } else if (_orderType == OrderType.SELL) {
             require(balances[_msgSender()][_symbol] >= _amount);
         }
@@ -49,29 +49,34 @@ contract Dex is Wallet {
         Order[] storage orders = orderBook[_symbol][uint(_orderType)];
 
         orders.push(
-            Order(nextOrderId, _msgSender(), _orderType, _symbol, _amount, _price.div(100), 0)
+            Order(nextOrderId, _msgSender(), _orderType, _symbol, _amount, _price, 0)
         );
 
         // Bubble sort
-        if (orders.length > 0) {
-            if (_orderType == OrderType.BUY) {
-                for (uint256 i=orders.length-1; i>0; i--) {
-                    if (orders[i-1].price > orders[i].price) {
-                        Order memory orderToMove = orders[i-1];
-                        orders[i-1] = orders[i];
-                        orders[i] = orderToMove;
-                    }
+        uint i = orders.length > 0 ? orders.length - 1 : 0;
+        if(_orderType == OrderType.BUY){
+            while(i > 0){
+                if(orders[i - 1].price > orders[i].price) {
+                    break;
                 }
-            } else if (_orderType == OrderType.SELL) {
-                for (uint256 i=orders.length-1; i>0; i--) {
-                    if (orders[i-1].price < orders[i].price) {
-                        Order memory orderToMove = orders[i-1];
-                        orders[i-1] = orders[i];
-                        orders[i] = orderToMove;
-                    }
-                }
+                Order memory orderToMove = orders[i - 1];
+                orders[i - 1] = orders[i];
+                orders[i] = orderToMove;
+                i--;
             }
         }
+        else if(_orderType == OrderType.SELL){
+            while(i > 0){
+                if(orders[i - 1].price < orders[i].price) {
+                    break;   
+                }
+                Order memory orderToMove = orders[i - 1];
+                orders[i - 1] = orders[i];
+                orders[i] = orderToMove;
+                i--;
+            }
+        }
+
 
         nextOrderId = nextOrderId.add(1);
     }
@@ -114,7 +119,7 @@ contract Dex is Wallet {
                 balances[orders[i].trader][_symbol] = balances[orders[i].trader][_symbol].sub(filled);
                 balances[orders[i].trader][ETH] = balances[orders[i].trader][ETH].add(cost);
 
-                _transfer(FEE_ADDRESS, _amount.div(100));
+                // _transfer(FEE_ADDRESS, _amount);
             } else if (_orderType == OrderType.SELL) {
                 balances[_msgSender()][_symbol] = balances[_msgSender()][_symbol].sub(filled);
                 balances[_msgSender()][ETH] = balances[_msgSender()][ETH].add(cost);
@@ -122,7 +127,7 @@ contract Dex is Wallet {
                 balances[orders[i].trader][_symbol] = balances[orders[i].trader][_symbol].add(filled);
                 balances[orders[i].trader][ETH] = balances[orders[i].trader][ETH].sub(cost);
 
-                _transfer(FEE_ADDRESS, _amount.div(100));
+                // _transfer(FEE_ADDRESS, _amount);
             }
         }
 

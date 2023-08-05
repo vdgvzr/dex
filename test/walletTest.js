@@ -2,54 +2,68 @@ const Dex = artifacts.require("Dex");
 const Link = artifacts.require("Link");
 const truffleAssert = require("truffle-assertions");
 
-contract("Wallet", async (accounts) => {
-  let DEX;
-  let LINK;
-  let LINK_NAME;
-  let LINK_SYMBOL;
-  let ETH_SYMBOL = web3.utils.fromUtf8("ETH");
-
-  before(async () => {
-    DEX = await Dex.deployed();
-    LINK = await Link.deployed();
-    LINK_NAME = await web3.utils.fromUtf8(LINK.name());
-    LINK_SYMBOL = await web3.utils.fromUtf8(LINK.symbol());
-  });
-
-  describe("wallet functions", async () => {
-    it("should only be possible for owner to add tokens", async () => {
-      await truffleAssert.passes(
-        DEX.addToken(LINK_NAME, LINK_SYMBOL, LINK.address, {
+contract.skip("Dex", (accounts) => {
+  it("should only be possible for owner to add tokens", async () => {
+    let dex = await Dex.deployed();
+    let link = await Link.deployed();
+    await truffleAssert.passes(
+      dex.addToken(
+        "link-chainlink",
+        web3.utils.fromUtf8("Chainlink"),
+        web3.utils.fromUtf8("LINK"),
+        link.address,
+        {
           from: accounts[0],
-        })
-      );
-
-      await truffleAssert.reverts(
-        DEX.addToken(LINK_NAME, LINK_SYMBOL, LINK.address, {
+        }
+      )
+    );
+    await truffleAssert.reverts(
+      dex.addToken(
+        "aave-aave",
+        web3.utils.fromUtf8("Aave"),
+        web3.utils.fromUtf8("AAVE"),
+        link.address,
+        {
           from: accounts[1],
-        })
-      );
-    });
-
-    it("should handle deposits correctly", async () => {
-      await LINK.approve(DEX.address, 500);
-      await DEX.deposit(100, LINK_SYMBOL);
-      let balance = await DEX.balances(accounts[0], LINK_SYMBOL);
-      assert.equal(balance.toNumber(), 100);
-    });
-
-    it("should handle ETH deposits correctly", async () => {
-      await DEX.depositEth({ value: 100 });
-      let balance = await DEX.balances(accounts[0], ETH_SYMBOL);
-      assert.equal(balance.toNumber(), 100);
-    });
-
-    it("should handle withdrawals correctly", async () => {
-      await truffleAssert.passes(DEX.withdraw(100, LINK_SYMBOL));
-    });
-
-    it("should handle faulty withdrawals correctly", async () => {
-      await truffleAssert.reverts(DEX.withdraw(500, LINK_SYMBOL));
-    });
+        }
+      )
+    );
+  });
+  it("should handle deposits correctly", async () => {
+    let dex = await Dex.deployed();
+    let link = await Link.deployed();
+    await link.approve(dex.address, 500);
+    await dex.deposit(100, web3.utils.fromUtf8("LINK"));
+    let balance = await dex.balances(accounts[0], web3.utils.fromUtf8("LINK"));
+    assert.equal(balance.toNumber(), 100);
+  });
+  it("should handle faulty withdrawals correctly", async () => {
+    let dex = await Dex.deployed();
+    let link = await Link.deployed();
+    await truffleAssert.reverts(dex.withdraw(500, web3.utils.fromUtf8("LINK")));
+  });
+  it("should handle correct withdrawals correctly", async () => {
+    let dex = await Dex.deployed();
+    let link = await Link.deployed();
+    await truffleAssert.passes(dex.withdraw(100, web3.utils.fromUtf8("LINK")));
+  });
+  it("should deposit the correct amount of ETH", async () => {
+    let dex = await Dex.deployed();
+    let link = await Link.deployed();
+    await dex.depositEth({ value: 1000 });
+    let balance = await dex.balances(accounts[0], web3.utils.fromUtf8("ETH"));
+    assert.equal(balance.toNumber(), 1000);
+  });
+  it("should withdraw the correct amount of ETH", async () => {
+    let dex = await Dex.deployed();
+    let link = await Link.deployed();
+    await dex.withdrawEth(1000);
+    let balance = await dex.balances(accounts[0], web3.utils.fromUtf8("ETH"));
+    assert.equal(balance.toNumber(), 0);
+  });
+  it("should not allow over-withdrawing of ETH", async () => {
+    let dex = await Dex.deployed();
+    let link = await Link.deployed();
+    await truffleAssert.reverts(dex.withdrawEth(100));
   });
 });

@@ -39,7 +39,7 @@ export default function TradingPanel({
 
   function createLimitOrder(from, orderType, symbol, amount, price) {
     dex?.methods
-      .createLimitOrder(orderType, symbol, amount, parseInt(price * 100))
+      .createLimitOrder(orderType, symbol, parseInt(amount), parseInt(price))
       .send({
         from,
       })
@@ -60,7 +60,7 @@ export default function TradingPanel({
 
   function createMarketOrder(from, orderType, symbol, amount) {
     dex?.methods
-      .createMarketOrder(orderType, symbol, amount)
+      .createMarketOrder(orderType, symbol, parseInt(amount))
       .send({
         from,
       })
@@ -148,7 +148,8 @@ export default function TradingPanel({
       </Row>
       <Row>
         <Col>
-          {orderType === "LIMIT" ? (
+          {orderType === "LIMIT" &&
+          (balances[0]?.amount > 0 || orderAction === 1) ? (
             <Input
               type="number"
               placeholder="Price"
@@ -161,29 +162,49 @@ export default function TradingPanel({
           ) : (
             <div
               className="mb-3"
-              style={{ height: inputHeightref.current.offsetHeight }}
+              style={{
+                height:
+                  inputHeightref.current != undefined &&
+                  inputHeightref.current.offsetHeight,
+              }}
             ></div>
           )}
-          <div ref={inputHeightref}>
-            <Input
-              type="number"
-              placeholder="Amount"
-              label="Amount"
-              controlId="amountValue"
-              setInput={setAmountInput}
-              transfer={false}
-              disabled={false}
-            />
-          </div>
+          {balances[0]?.amount > 0 || orderAction === 1 ? (
+            <div ref={inputHeightref}>
+              <Input
+                type="number"
+                placeholder="Amount"
+                label="Amount"
+                controlId="amountValue"
+                setInput={setAmountInput}
+                transfer={false}
+                disabled={false}
+              />
+            </div>
+          ) : (
+            <div
+              className="mb-3"
+              style={{
+                height:
+                  inputHeightref.current != undefined &&
+                  inputHeightref.current.offsetHeight,
+              }}
+            ></div>
+          )}
         </Col>
       </Row>
       <Row>
         <Col>
           <Btn
+            disabled={!(balances[0]?.amount > 0 || orderAction === 1)}
             classes="w-100"
-            text={`Submit ${orderType} ${
-              orderAction === 0 ? "Buy" : "Sell"
-            } order`}
+            text={
+              balances[0]?.amount > 0 || orderAction === 1
+                ? `Submit ${orderType} ${
+                    orderAction === 0 ? "Buy" : "Sell"
+                  } order`
+                : "Deposit ETH to continue"
+            }
             action={
               orderType === "LIMIT"
                 ? () =>
