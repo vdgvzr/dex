@@ -39,7 +39,12 @@ export default function TradingPanel({
 
   function createLimitOrder(from, orderType, symbol, amount, price) {
     dex?.methods
-      .createLimitOrder(orderType, symbol, parseInt(amount), parseInt(price))
+      .createLimitOrder(
+        orderType,
+        symbol,
+        parseInt(amount),
+        window.web3.utils.toWei(price, "ether")
+      )
       .send({
         from,
       })

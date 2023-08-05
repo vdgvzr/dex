@@ -14,7 +14,7 @@ const ORDERTYPE = {
 };
 
 export default function Dex() {
-  const { dex, balances } = useMetaMask();
+  const { dex, balances, wallet } = useMetaMask();
   const [orderType, setOrderType] = useState(ORDERTYPE.LIMIT);
   const [selectedToken, setSelectedToken] = useLocalStorage(
     "SELECTED_TOKEN",
@@ -22,6 +22,7 @@ export default function Dex() {
   );
   const [orderAction, setOrderAction] = useState(0);
   const [orderBook, setOrderBook] = useState([]);
+  const [thebalances, setBalances] = useState(null);
 
   useEffect(() => {
     async function getOrderBook(token) {
@@ -35,6 +36,19 @@ export default function Dex() {
 
     getOrderBook(formatToBytes32(selectedToken), orderAction);
   }, [dex, orderAction, selectedToken]);
+
+  useEffect(() => {
+    async function balances(address, token) {
+      return await dex?.methods
+        .balances(address, token)
+        .call()
+        .then((res) => {
+          setBalances(res);
+        });
+    }
+
+    balances(wallet.accounts[0], formatToBytes32("ETH"));
+  }, [dex, wallet]);
 
   return (
     <>

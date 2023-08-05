@@ -9,7 +9,7 @@ export default function PairPanel({ setSelectedToken }) {
 
   const headings = {
     0: "Pair",
-    1: "Price (USD)",
+    1: "Price",
   };
 
   const rows = [];

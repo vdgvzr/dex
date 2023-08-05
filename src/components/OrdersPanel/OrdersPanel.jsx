@@ -1,6 +1,7 @@
 import { Col } from "react-bootstrap";
 import { formatBalance } from "../../utils";
 import Tbl from "../Table/Table";
+import Icon from "../Icon/Icon";
 
 export default function PairPanel({ orderBook, selectedToken }) {
   const headings = {
@@ -37,8 +38,12 @@ export default function PairPanel({ orderBook, selectedToken }) {
   {
     orders.map((order) => {
       rows.push({
-        price:
-          "$" + formatBalance(window.web3.utils.toWei(order.price, "ether")),
+        price: (
+          <>
+            <Icon icon="eth" />
+            {window.web3.utils.fromWei(order.price, "ether")}
+          </>
+        ),
         amount:
           formatBalance(window.web3.utils.toWei(order.amount, "ether")) +
           " " +
@@ -50,7 +55,7 @@ export default function PairPanel({ orderBook, selectedToken }) {
 
   return (
     <>
-      <Col className="text-center">
+      <Col className="text-center orders-panel">
         <h3>Orderbook</h3>
       </Col>
       <Col>

@@ -2,6 +2,7 @@ import { Col } from "react-bootstrap";
 import Tbl from "../Table/Table";
 import { formatBalance, formatToBytes32 } from "../../utils";
 import { useMetaMask } from "../../hooks/useMetamask";
+import Icon from "../Icon/Icon";
 
 export default function UserOrderPanel({
   orderBook,
@@ -26,9 +27,12 @@ export default function UserOrderPanel({
           window.web3.utils.toChecksumAddress(wallet?.accounts[0])
         ) {
           rows.push({
-            price:
-              "$" +
-              formatBalance(window.web3.utils.toWei(order.price, "ether")),
+            price: (
+              <>
+                <Icon icon="eth" />
+                {window.web3.utils.fromWei(order.price, "ether")}
+              </>
+            ),
             amount:
               formatBalance(window.web3.utils.toWei(order.amount, "ether")) +
               " " +
@@ -54,12 +58,12 @@ export default function UserOrderPanel({
 
   function deleteOrder(id, ticker, orderType) {
     dex?.methods
-      .deleteOrder(parseInt(id), ticker, orderType)
+      .deleteOrder(id, ticker, orderType)
       .send({
         from: wallet.accounts[0],
       })
       .once("receipt", () => {
-        setSuccessMessage("Successfully deleted message");
+        setSuccessMessage("Successfully deleted order!");
         loadWeb3();
       })
       .catch((e) => {
