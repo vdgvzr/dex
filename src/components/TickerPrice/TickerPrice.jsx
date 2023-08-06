@@ -7,8 +7,10 @@ export default function TickerPrice({ token }) {
   let ethUrl = `${import.meta.env.VITE_PAPRIKA_URL}tickers/eth-ethereum`;
   const [price, setPrice] = useState(0);
   const [ethPrice, setEthPrice] = useState(0);
+  const [priceLoading, setPriceLoading] = useState(false);
 
   useEffect(() => {
+    setPriceLoading(true);
     axios
       .get(url)
       .then((res) => {
@@ -30,13 +32,20 @@ export default function TickerPrice({ token }) {
       .catch((e) => {
         console.error(e);
       });
+    setPriceLoading(false);
   }, [url, ethUrl, token]);
 
   return (
     <>
       <span className="ticker-price">
-        <Icon icon="eth" />
-        {(price / ethPrice).toFixed(6)}
+        {priceLoading ? (
+          <Icon icon="spin" spin={true} />
+        ) : (
+          <>
+            <Icon icon="eth" />
+            {(price / ethPrice).toFixed(6)}
+          </>
+        )}
       </span>
     </>
   );

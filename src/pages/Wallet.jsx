@@ -4,6 +4,7 @@ import { formatToBytes32, formatFromBytes32 } from "../utils";
 import WalletModal from "../components/WalletModal/WalletModal";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import Icon from "../components/Icon/Icon";
 
 export default function Wallet() {
   const {
@@ -14,6 +15,7 @@ export default function Wallet() {
     updateWalletAndAccounts,
     setErrorMessage,
     setSuccessMessage,
+    isLoading,
   } = useMetaMask();
 
   const [input, setInput] = useState(0);
@@ -194,14 +196,18 @@ export default function Wallet() {
     <>
       <Row className="justify-content-center align-items-center main-content">
         <Col lg={8} md={10} xs={12} className="format-container">
-          <div className="bg-opaque border-brand-primary p-3">
-            <Tbl
-              showHeadings={true}
-              headings={headings}
-              rows={rows}
-              classes="my-5"
-            />
-          </div>
+          {isLoading ? (
+            <Icon icon="spin" spin={true} />
+          ) : (
+            <div className="bg-opaque border-brand-primary p-3">
+              <Tbl
+                showHeadings={true}
+                headings={headings}
+                rows={rows}
+                classes="my-5"
+              />
+            </div>
+          )}
         </Col>
       </Row>
     </>

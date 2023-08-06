@@ -150,6 +150,9 @@ export const MetaMaskContextProvider = ({ children }) => {
 
     if (accounts.length === 0) {
       // If there are no accounts, then the user is disconnected
+      if (window.location.pathname != "/") {
+        window.location.href = "/";
+      }
       setWallet(disconnectedState);
       return;
     }

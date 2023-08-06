@@ -103,7 +103,7 @@ function Navigation({ setTheme }) {
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav>
             {PAGES.map((page, index) => {
-              if (hasProvider) {
+              if (wallet.accounts[0] != undefined) {
                 if (page.name !== "Admin" || isOwner(wallet, owner)) {
                   return (
                     <Link className="nav-link" key={index} to={page.url}>
