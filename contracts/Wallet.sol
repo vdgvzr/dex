@@ -16,6 +16,16 @@ contract Wallet is Context, Ownable  {
     using SafeMath for uint256;
 
     /**
+    * Events
+    */
+    event TokenAdded(string _id, bytes32 _name, bytes32 _ticker, address _tokenAddress);
+    event TokenDeleted(bytes32 _ticker, uint256 _index);
+    event DepositEth(uint256 _value);
+    event WithdrawEth(uint256 _amount);
+    event DepositTokens(uint256 _amount, bytes32 _ticker);
+    event WithdrawTokens(uint256 _amount, bytes32 _ticker);
+
+    /**
     * @dev Modifier for deposit and withdraw functions to check if the token/ETH actually
     * exists in contract
     */
@@ -56,6 +66,7 @@ contract Wallet is Context, Ownable  {
         tokens[_ticker] = Token(_id, _name, _ticker, _tokenAddress);
         tokenList.push(_ticker);
         tokenListCount++;
+        emit TokenAdded(_id, _name, _ticker, _tokenAddress);
     }
 
     function deleteToken(bytes32 _ticker, uint256 _index) public onlyOwner() {
@@ -63,6 +74,7 @@ contract Wallet is Context, Ownable  {
         tokenList[_index] = tokenList[tokenList.length - 1];
         tokenList.pop();
         tokenListCount--;
+        emit TokenDeleted(_ticker, _index);
     }
 
     /**
@@ -70,8 +82,12 @@ contract Wallet is Context, Ownable  {
     */
     function depositEth() public payable {
         balances[_msgSender()][ETH] = balances[_msgSender()][ETH].add(msg.value);
+        emit DepositEth(msg.value);
     }
 
+    /**
+    * @dev Withdraw ETH from your account
+    */
     function withdrawEth(uint256 _amount) public payable returns (bool) {
         require(balances[_msgSender()][ETH] >= _amount, "Insufficient balance");
         balances[_msgSender()][ETH] = balances[_msgSender()][ETH].sub(_amount);
@@ -85,6 +101,7 @@ contract Wallet is Context, Ownable  {
     function deposit(uint256 _amount, bytes32 _ticker) public tokenExists(_ticker) {
         IERC20(tokens[_ticker].tokenAddress).transferFrom(_msgSender(), address(this), _amount);
         balances[_msgSender()][_ticker] = balances[_msgSender()][_ticker].add(_amount);
+        emit DepositTokens(_amount, _ticker);
     }
 
     /**
@@ -94,6 +111,7 @@ contract Wallet is Context, Ownable  {
         require(balances[_msgSender()][_ticker] >= _amount, "Insufficient balance.");
         balances[_msgSender()][_ticker] = balances[_msgSender()][_ticker].sub(_amount);
         IERC20(tokens[_ticker].tokenAddress).transfer(_msgSender(), _amount);
+        emit WithdrawTokens(_amount, _ticker);
     }
 
 }

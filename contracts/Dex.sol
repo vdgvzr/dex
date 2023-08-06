@@ -9,6 +9,13 @@ contract Dex is Wallet {
 
     using SafeMath for uint256;
 
+    /**
+    * Events
+    */
+    event DeleteOrder(uint256 _orderId, bytes32 _symbol, OrderType _orderType);
+    event CreateLimitOrder(OrderType _orderType, bytes32 _symbol, uint256 _amount, uint256 _price);
+    event CreateMarketOrder(OrderType _orderType, bytes32 _symbol, uint256 _amount);
+
     enum OrderType {
         BUY,
         SELL
@@ -24,18 +31,19 @@ contract Dex is Wallet {
         uint256 filled;
     }
 
-    // address payable constant FEE_ADDRESS = payable(0x7eaAFED0E594a1ac12f50d59847eBB784c66c45E);
+    address payable constant FEE_ADDRESS = payable(0x7eaAFED0E594a1ac12f50d59847eBB784c66c45E);
 
     uint public nextOrderId = 0;
 
     mapping (bytes32 => mapping (uint => Order[])) public orderBook;
 
-    function getOrderBook(bytes32 _symbol, OrderType _orderType) view public returns (Order[] memory) {
+    function getOrderBook(bytes32 _symbol, OrderType _orderType) public view returns (Order[] memory) {
         return orderBook[_symbol][uint(_orderType)];
     }
 
     function deleteOrder(uint256 _orderId, bytes32 _symbol, OrderType _orderType) public {
         delete orderBook[_symbol][uint(_orderType)][_orderId];
+        emit DeleteOrder(_orderId, _symbol, _orderType);
     }
 
     function createLimitOrder(OrderType _orderType,  bytes32 _symbol, uint256 _amount, uint256 _price) public {
@@ -78,6 +86,7 @@ contract Dex is Wallet {
 
 
         nextOrderId = nextOrderId.add(1);
+        emit CreateLimitOrder(_orderType, _symbol, _amount, _price);
     }
 
     function createMarketOrder(OrderType _orderType,  bytes32 _symbol, uint256 _amount) public {
@@ -118,7 +127,7 @@ contract Dex is Wallet {
                 balances[orders[i].trader][_symbol] = balances[orders[i].trader][_symbol].sub(filled);
                 balances[orders[i].trader][ETH] = balances[orders[i].trader][ETH].add(cost);
 
-                // _transfer(FEE_ADDRESS, _amount);
+                _transfer(FEE_ADDRESS, cost.div(100));
             } else if (_orderType == OrderType.SELL) {
                 balances[_msgSender()][_symbol] = balances[_msgSender()][_symbol].sub(filled);
                 balances[_msgSender()][ETH] = balances[_msgSender()][ETH].add(cost);
@@ -126,7 +135,7 @@ contract Dex is Wallet {
                 balances[orders[i].trader][_symbol] = balances[orders[i].trader][_symbol].add(filled);
                 balances[orders[i].trader][ETH] = balances[orders[i].trader][ETH].sub(cost);
 
-                // _transfer(FEE_ADDRESS, _amount);
+                _transfer(FEE_ADDRESS, cost.div(100));
             }
         }
 
@@ -136,10 +145,11 @@ contract Dex is Wallet {
             }
             orders.pop();
         }
+        emit CreateMarketOrder(_orderType, _symbol, _amount);
     }
 
-    function _transfer(address payable recipient, uint amount) private returns(bool) {
-        (bool success,) = recipient.call{value: amount}("");
+    function _transfer(address payable _recipient, uint _amount) private returns(bool) {
+        (bool success,) = _recipient.call{value: _amount}("");
         return success;
     }
 }

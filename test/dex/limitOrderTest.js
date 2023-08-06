@@ -1,88 +1,82 @@
 const Dex = artifacts.require("Dex");
 const Link = artifacts.require("Link");
 const truffleAssert = require("truffle-assertions");
+const web3 = require("web3");
+require("chai").use(require("chai-as-promised")).should();
 
-contract.skip("Dex", (accounts) => {
-  //The user must have ETH deposited such that deposited eth >= buy order value
-  it("should throw an error if ETH balance is too low when creating BUY limit order", async () => {
-    let dex = await Dex.deployed();
-    let link = await Link.deployed();
-    await truffleAssert.reverts(
-      dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 10, 1)
-    );
-    dex.depositEth({ value: 10 });
-    await truffleAssert.passes(
-      dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 10, 1)
-    );
+contract("Dex", (accounts) => {
+  let account = accounts[0];
+
+  let dex;
+  let link;
+
+  let linkSymbol = web3.utils.fromUtf8("LINK");
+  let linkName = web3.utils.fromUtf8("Chainlink");
+
+  before(async () => {
+    dex = await Dex.deployed();
+    link = await Link.deployed();
   });
-  //The user must have enough tokens deposited such that token balance >= sell order amount
-  it("should throw an error if token balance is too low when creating SELL limit order", async () => {
-    let dex = await Dex.deployed();
-    let link = await Link.deployed();
-    await truffleAssert.reverts(
-      dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 10, 1)
-    );
-    await link.approve(dex.address, 500);
-    await dex.addToken(web3.utils.fromUtf8("LINK"), link.address, {
-      from: accounts[0],
+
+  describe("limit orers", async () => {
+    it("should throw an error if ETH balance is too low when creating BUY limit order", async () => {
+      await truffleAssert.reverts(dex.createLimitOrder(0, linkSymbol, 10, 1));
     });
-    await dex.deposit(10, web3.utils.fromUtf8("LINK"));
-    await truffleAssert.passes(
-      dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 10, 1)
-    );
-  });
-  //The BUY order book should be ordered on price from highest to lowest starting at index 0
-  it("The BUY order book should be ordered on price from highest to lowest starting at index 0", async () => {
-    let dex = await Dex.deployed();
-    let link = await Link.deployed();
-    await link.approve(dex.address, 500);
-    await dex.depositEth({ value: 3000 });
-    await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 15, 300.7);
-    await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 15, 100.7);
-    await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 15, 200.7);
 
-    let orderbook = await dex.getOrderBook(web3.utils.fromUtf8("LINK"), 0);
-    assert(orderbook.length > 0);
-    for (let i = 0; i < orderbook.length - 1; i++) {
-      assert(
-        orderbook[i].price >= orderbook[i + 1].price,
-        "not right order in buy book"
-      );
-    }
-  });
-  //Delete orddr
-  it("deletes orders correctly", async () => {
-    let dex = await Dex.deployed();
-    let link = await Link.deployed();
-    await link.approve(dex.address, 500);
-    await dex.depositEth({ value: 3000 });
-    await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 15, 300.7);
-    await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 15, 100.7);
-    await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 15, 200.7);
+    it("should throw an error if token balance is too low when creating SELL limit order", async () => {
+      await truffleAssert.reverts(dex.createLimitOrder(1, linkSymbol, 10, 1));
+    });
 
-    let orderbook = await dex.getOrderBook(web3.utils.fromUtf8("LINK"), 0);
+    it("The BUY order book should be ordered on price from highest to lowest starting at index 0", async () => {
+      await dex.addToken("link-chainlink", linkName, linkSymbol, link.address, {
+        from: account,
+      });
+      await link.approve(dex.address, 500);
+      await dex.deposit(500, linkSymbol);
+      await dex.depositEth({ value: 3000 });
+      await dex.createLimitOrder(0, linkSymbol, 10, 300);
+      await dex.createLimitOrder(0, linkSymbol, 10, 100);
+      await dex.createLimitOrder(0, linkSymbol, 10, 200);
+      let orderbook = await dex.getOrderBook(linkSymbol, 0);
+      assert(orderbook.length > 0);
+      for (let i = 0; i < orderbook.length - 1; i++) {
+        assert(
+          orderbook[i].price >= orderbook[i + 1].price,
+          "not right order in buy book"
+        );
+      }
+    });
 
-    dex.deleteOrder(1, web3.utils.fromUtf8("LINK"), 0);
-    assert(orderbook.length > 0);
-    assert(orderbook[1].price === 0);
-  });
-  //The SELL order book should be ordered on price from lowest to highest starting at index 0
-  it("The SELL order book should be ordered on price from lowest to highest starting at index 0", async () => {
-    let dex = await Dex.deployed();
-    let link = await Link.deployed();
-    await link.approve(dex.address, 500);
-    await dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 1, 300);
-    await dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 1, 100);
-    await dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 1, 200);
+    it("The SELL order book should be ordered on price from lowest to highest starting at index 0", async () => {
+      await dex.addToken("link-chainlink", linkName, linkSymbol, link.address, {
+        from: account,
+      });
+      await link.approve(dex.address, 500);
+      await dex.createLimitOrder(1, linkSymbol, 1, 300);
+      await dex.createLimitOrder(1, linkSymbol, 1, 100);
+      await dex.createLimitOrder(1, linkSymbol, 1, 200);
 
-    let orderbook = await dex.getOrderBook(web3.utils.fromUtf8("LINK"), 1);
-    assert(orderbook.length > 0);
+      let orderbook = await dex.getOrderBook(linkSymbol, 1);
+      assert(orderbook.length > 0);
 
-    for (let i = 0; i < orderbook.length - 1; i++) {
-      assert(
-        orderbook[i].price <= orderbook[i + 1].price,
-        "not right order in sell book"
-      );
-    }
+      for (let i = 0; i < orderbook.length - 1; i++) {
+        assert(
+          orderbook[i].price <= orderbook[i + 1].price,
+          "not right order in sell book"
+        );
+      }
+    });
+
+    it("deletes orders correctly", async () => {
+      await dex.addToken("link-chainlink", linkName, linkSymbol, link.address, {
+        from: account,
+      });
+      await link.approve(dex.address, 500);
+      await dex.createLimitOrder(1, linkSymbol, 1, 300);
+      await dex.createLimitOrder(1, linkSymbol, 1, 100);
+      await dex.createLimitOrder(1, linkSymbol, 1, 200);
+
+      await truffleAssert.passes(dex.deleteOrder(4, linkSymbol, 1));
+    });
   });
 });
