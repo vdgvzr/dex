@@ -14,11 +14,6 @@ export default function PairPanel({ orderBook, selectedToken, orderAction }) {
 
   let duplicates = [];
 
-  duplicates.push({
-    price: parseInt(orderBook[orderBook.length - 1]?.price),
-    amount: parseInt(orderBook[orderBook.length - 1]?.amount),
-  });
-
   for (let i = 0; i < orderBook.length - 1; i++) {
     let total = 0;
     if (orderBook[i].price === orderBook[i + 1].price) {
@@ -31,6 +26,11 @@ export default function PairPanel({ orderBook, selectedToken, orderAction }) {
       });
     }
   }
+
+  duplicates.push({
+    price: parseInt(orderBook[orderBook.length - 1]?.price),
+    amount: parseInt(orderBook[orderBook.length - 1]?.amount),
+  });
 
   let orders = duplicates.filter(
     (value, index, self) =>
